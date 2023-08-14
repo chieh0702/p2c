@@ -1,11 +1,15 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <cstdlib>
+#include <string>
+void showHelp();
 class Generator;
 class Generator_State
 {
 public:
     virtual std::string getline(Generator *) = 0;
+    Generator_State(){};
     ~Generator_State(){};
 };
 class NORMAL_STATE : public Generator_State
@@ -41,6 +45,10 @@ class CMD_STATE : public Generator_State
     virtual std::string getline(Generator *) override;
 };
 class ENTRY_STATE : public Generator_State
+{
+    virtual std::string getline(Generator *) override;
+};
+class OUTPUT_STATE : public Generator_State
 {
     virtual std::string getline(Generator *) override;
 };
@@ -81,12 +89,12 @@ public:
     ~Generator(){};
     std::string getToken()
     {
-        if (this->_index > this->_tokens.size())
+        if (this->_index >= this->_tokens.size())
         {
             this->_eof = true;
             return "";
         }
-        return this->_tokens[this->_index++];
+        return this->_tokens[(this->_index)++];
     };
     std::string getline() { return _state->getline(this); };
     void setState(Generator_State *new_state)
@@ -99,7 +107,7 @@ public:
 };
 std::string NORMAL_STATE::getline(Generator *generator)
 {
-    std::string token = generator->getToken();
+    std::string token(generator->getToken());
     if (token == "-a" || token == "--add")
         generator->setState(new ADD_STATE());
     else if (token == "-c" || token == "--copy")
@@ -109,7 +117,7 @@ std::string NORMAL_STATE::getline(Generator *generator)
     else if (token == "-f" || token == "--from")
         generator->setState(new FROM_STATE());
     else if (token == "-h" || token == "--help")
-        generator->setState(new SKIP_STATE());
+        showHelp();
     else if (token == "-i" || token == "--ignore")
         generator->setState(new IGNORE_STATE());
     else if (token == "-m" || token == "--cmd")
@@ -117,7 +125,7 @@ std::string NORMAL_STATE::getline(Generator *generator)
     else if (token == "-n" || token == "--entrypoint")
         generator->setState(new ENTRY_STATE());
     else if (token == "-o" || token == "--output")
-        generator->setState(new SKIP_STATE());
+        generator->setState(new OUTPUT_STATE());
     else if (token == "-p" || token == "--expose")
         generator->setState(new EXPOSE_STATE());
     else if (token == "-r" || token == "--run")
@@ -128,49 +136,61 @@ std::string NORMAL_STATE::getline(Generator *generator)
 }
 std::string ADD_STATE::getline(Generator *generator)
 {
-    // Implementation for ADD_STATE
+    return "";
 }
 std::string COPY_STATE::getline(Generator *generator)
 {
-    // Implementation for COPY_STATE
+    return "";
 }
 std::string ENV_STATE::getline(Generator *generator)
 {
-    // Implementation for ENV_STATE
+    return "";
 }
 std::string FROM_STATE::getline(Generator *generator)
 {
-    // Implementation for FROM_STATE
+    return "";
 }
 std::string HELP_STATE::getline(Generator *generator)
 {
-    // Implementation for HELP_STATE
+    return "";
 }
 std::string IGNORE_STATE::getline(Generator *generator)
 {
-    // Implementation for IGNORE_STATE
+    return "";
 }
 std::string CMD_STATE::getline(Generator *generator)
 {
-    // Implementation for CMD_STATE
+    return "";
 }
 std::string ENTRY_STATE::getline(Generator *generator)
 {
-    // Implementation for ENTRY_STATE
+    return "";
+}
+std::string OUTPUT_STATE::getline(Generator *generator)
+{
+    return "";
 }
 std::string EXPOSE_STATE::getline(Generator *generator)
 {
-    // Implementation for EXPOSE_STATE
+    return "";
 }
 std::string RUN_STATE::getline(Generator *generator)
 {
-    // Implementation for RUN_STATE
+    return "";
 }
 std::string SKIP_STATE::getline(Generator *generator)
 {
-    // Implementation for SKIP_STATE
+    return "";
 }
 std::string ERROR_STATE::getline(Generator *generator)
 {
-    // Implementation for ERROR_STATE
+    return "";
+}
+void showHelp()
+{
+    std::ifstream fin("help_info");
+    if (fin.is_open())
+        std::cout << fin.rdbuf();
+    fin.close();
+    exit(1);
 }
