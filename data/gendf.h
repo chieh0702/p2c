@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <string>
 void showHelp();
+std::vector<std::string> split(std::string, std::string);
 class Generator;
 class Generator_State
 {
@@ -16,11 +17,7 @@ class NORMAL_STATE : public Generator_State
 {
     virtual std::string getline(Generator *) override;
 };
-class ADD_STATE : public Generator_State
-{
-    virtual std::string getline(Generator *) override;
-};
-class COPY_STATE : public Generator_State
+class ADDCOPY_STATE : public Generator_State
 {
     virtual std::string getline(Generator *) override;
 };
@@ -45,10 +42,6 @@ class CMD_STATE : public Generator_State
     virtual std::string getline(Generator *) override;
 };
 class ENTRY_STATE : public Generator_State
-{
-    virtual std::string getline(Generator *) override;
-};
-class OUTPUT_STATE : public Generator_State
 {
     virtual std::string getline(Generator *) override;
 };
@@ -89,12 +82,20 @@ public:
     ~Generator(){};
     std::string getToken()
     {
-        if (this->_index >= this->_tokens.size())
+        if (!this->is_EOF())
         {
-            this->_eof = true;
-            return "";
+            if (this->_index + 1 >= this->_tokens.size())
+                this->_eof = true;
+            return this->_tokens[(this->_index)++];
         }
-        return this->_tokens[(this->_index)++];
+        return "";
+    };
+    std::string peekToken(int offset)
+    {
+        int index = (this->_index) + offset;
+        if ((index > 0) || (index < this->_tokens.size()))
+            return this->_tokens[(this->_index) + offset];
+        return "";
     };
     std::string getline() { return _state->getline(this); };
     void setState(Generator_State *new_state)
@@ -104,14 +105,15 @@ public:
     };
     bool is_EOF() { return this->_eof; };
     std::string getOutput() { return this->_output; };
+    void setOutput(std::string file) { this->_output = file; };
 };
 std::string NORMAL_STATE::getline(Generator *generator)
 {
     std::string token(generator->getToken());
     if (token == "-a" || token == "--add")
-        generator->setState(new ADD_STATE());
+        generator->setState(new ADDCOPY_STATE());
     else if (token == "-c" || token == "--copy")
-        generator->setState(new COPY_STATE());
+        generator->setState(new ADDCOPY_STATE());
     else if (token == "-e" || token == "--env")
         generator->setState(new ENV_STATE());
     else if (token == "-f" || token == "--from")
@@ -125,7 +127,10 @@ std::string NORMAL_STATE::getline(Generator *generator)
     else if (token == "-n" || token == "--entrypoint")
         generator->setState(new ENTRY_STATE());
     else if (token == "-o" || token == "--output")
-        generator->setState(new OUTPUT_STATE());
+    {
+        generator->setOutput(generator->getToken());
+        return "";
+    }
     else if (token == "-p" || token == "--expose")
         generator->setState(new EXPOSE_STATE());
     else if (token == "-r" || token == "--run")
@@ -134,13 +139,20 @@ std::string NORMAL_STATE::getline(Generator *generator)
         generator->setState(new ERROR_STATE());
     return generator->getline();
 }
-std::string ADD_STATE::getline(Generator *generator)
+std::string ADDCOPY_STATE::getline(Generator *generator)
 {
-    return "";
-}
-std::string COPY_STATE::getline(Generator *generator)
-{
-    return "";
+    std::string arg = generator->getToken();
+    std::vector<std::string> argv = split(arg, ":");
+    if (argv.size() != 2)
+    {
+        generator->setState(new ERROR_STATE());
+        return "";
+    }
+    generator->setState(new NORMAL_STATE());
+    if (generator->peekToken(-2).find("-c") != std::string::npos)
+        return "COPY [\"" + argv[0] + "\", \"" + argv[1] + "\"]\n";
+    else
+        return "ADD [\"" + argv[0] + "\", \"" + argv[1] + "\"]\n";
 }
 std::string ENV_STATE::getline(Generator *generator)
 {
@@ -148,7 +160,7 @@ std::string ENV_STATE::getline(Generator *generator)
 }
 std::string FROM_STATE::getline(Generator *generator)
 {
-    return "";
+    return ""; // TODO:force commend
 }
 std::string HELP_STATE::getline(Generator *generator)
 {
@@ -166,10 +178,6 @@ std::string ENTRY_STATE::getline(Generator *generator)
 {
     return "";
 }
-std::string OUTPUT_STATE::getline(Generator *generator)
-{
-    return "";
-}
 std::string EXPOSE_STATE::getline(Generator *generator)
 {
     return "";
@@ -184,6 +192,8 @@ std::string SKIP_STATE::getline(Generator *generator)
 }
 std::string ERROR_STATE::getline(Generator *generator)
 {
+    std::cout << "Something wrong!\n";
+    showHelp();
     return "";
 }
 void showHelp()
@@ -193,4 +203,16 @@ void showHelp()
         std::cout << fin.rdbuf();
     fin.close();
     exit(1);
+}
+std::vector<std::string> split(std::string str, std::string pattern)
+{
+    std::vector<std::string> result;
+    while (str.find(pattern) != std::string::npos)
+    {
+        std::size_t pos = str.find(pattern);
+        result.push_back(str.substr(0, pos));
+        str = str.substr(pos + pattern.size());
+    }
+    result.push_back(str);
+    return result;
 }

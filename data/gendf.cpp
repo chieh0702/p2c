@@ -16,7 +16,7 @@ int main(int argc, char const *argv[])
         fout.open(generator.getOutput());
     else
         fout.open("Dockerfile");
-    fout << dockerfile;
+    fout << dockerfile;// TODO:commend order
     fout.close();
     return 0;
 }
