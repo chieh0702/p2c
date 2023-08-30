@@ -29,14 +29,6 @@ class FROM_STATE : public Generator_State
 {
     virtual std::string getline(Generator *) override;
 };
-class HELP_STATE : public Generator_State
-{
-    virtual std::string getline(Generator *) override;
-};
-class IGNORE_STATE : public Generator_State
-{
-    virtual std::string getline(Generator *) override;
-};
 class CMD_STATE : public Generator_State
 {
     virtual std::string getline(Generator *) override;
@@ -53,10 +45,6 @@ class RUN_STATE : public Generator_State
 {
     virtual std::string getline(Generator *) override;
 };
-class SKIP_STATE : public Generator_State
-{
-    virtual std::string getline(Generator *) override;
-};
 class ERROR_STATE : public Generator_State
 {
     virtual std::string getline(Generator *) override;
@@ -69,6 +57,7 @@ private:
     int _index;
     std::vector<std::string> _tokens;
     std::string _output;
+    std::string _ignore;
 
 public:
     Generator(std::vector<std::string> tokens)
@@ -78,6 +67,7 @@ public:
         this->_index = 0;
         this->_tokens = tokens;
         this->_output = "";
+        this->_ignore = "";
     };
     ~Generator(){};
     std::string getToken()
@@ -106,6 +96,8 @@ public:
     bool is_EOF() { return this->_eof; };
     std::string getOutput() { return this->_output; };
     void setOutput(std::string file) { this->_output = file; };
+    std::string getIgnore() { return this->_ignore; };
+    void addIgnore(std::string str) { this->_ignore += str + '\n'; };
 };
 std::string NORMAL_STATE::getline(Generator *generator)
 {
@@ -119,9 +111,15 @@ std::string NORMAL_STATE::getline(Generator *generator)
     else if (token == "-f" || token == "--from")
         generator->setState(new FROM_STATE());
     else if (token == "-h" || token == "--help")
+    {
         showHelp();
+        return "";
+    }
     else if (token == "-i" || token == "--ignore")
-        generator->setState(new IGNORE_STATE());
+    {
+        generator->addIgnore(generator->getToken());
+        return "";
+    }
     else if (token == "-m" || token == "--cmd")
         generator->setState(new CMD_STATE());
     else if (token == "-n" || token == "--entrypoint")
@@ -141,8 +139,7 @@ std::string NORMAL_STATE::getline(Generator *generator)
 }
 std::string ADDCOPY_STATE::getline(Generator *generator)
 {
-    std::string arg = generator->getToken();
-    std::vector<std::string> argv = split(arg, ":");
+    std::vector<std::string> argv = split(generator->getToken(), ":");
     if (argv.size() != 2)
     {
         generator->setState(new ERROR_STATE());
@@ -156,43 +153,37 @@ std::string ADDCOPY_STATE::getline(Generator *generator)
 }
 std::string ENV_STATE::getline(Generator *generator)
 {
-    return "";
+    generator->setState(new NORMAL_STATE());
+    return "ENV " + generator->getToken() + "\n";
 }
-std::string FROM_STATE::getline(Generator *generator)
+std::string FROM_STATE::getline(Generator *generator) // TODO:force commend
 {
-    return ""; // TODO:force commend
-}
-std::string HELP_STATE::getline(Generator *generator)
-{
-    return "";
-}
-std::string IGNORE_STATE::getline(Generator *generator)
-{
-    return "";
+    generator->setState(new NORMAL_STATE());
+    return "FROM " + generator->getToken() + "\n";
 }
 std::string CMD_STATE::getline(Generator *generator)
 {
-    return "";
+    generator->setState(new NORMAL_STATE());
+    return "CMD " + generator->getToken() + "\n";
 }
 std::string ENTRY_STATE::getline(Generator *generator)
 {
-    return "";
+    generator->setState(new NORMAL_STATE());
+    return "ENTRYPOINT " + generator->getToken() + "\n";
 }
 std::string EXPOSE_STATE::getline(Generator *generator)
 {
-    return "";
+    generator->setState(new NORMAL_STATE());
+    return "EXPOSE " + generator->getToken() + "\n";
 }
 std::string RUN_STATE::getline(Generator *generator)
 {
-    return "";
-}
-std::string SKIP_STATE::getline(Generator *generator)
-{
-    return "";
+    generator->setState(new NORMAL_STATE());
+    return "RUN " + generator->getToken() + "\n";
 }
 std::string ERROR_STATE::getline(Generator *generator)
 {
-    std::cout << "Something wrong!\n";
+    std::cout << "\e[33mSomething wrong!\e[0m\n";
     showHelp();
     return "";
 }

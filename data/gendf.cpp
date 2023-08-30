@@ -12,11 +12,14 @@ int main(int argc, char const *argv[])
     while (!generator.is_EOF())
         dockerfile += generator.getline();
     ofstream fout;
-    if (!generator.getOutput().empty())
-        fout.open(generator.getOutput());
-    else
-        fout.open("Dockerfile");
-    fout << dockerfile;// TODO:commend order
+    fout.open(generator.getOutput() + "Dockerfile"); // TODO:"/"
+    fout << dockerfile;                              // TODO:commend order
     fout.close();
+    if (!generator.getIgnore().empty())
+    {
+        fout.open(generator.getOutput() + ".dockerignore"); // TODO:"/"
+        fout << generator.getIgnore();
+        fout.close();
+    }
     return 0;
 }
