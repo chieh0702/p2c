@@ -11,7 +11,7 @@ private:
     std::vector<void *> _mod_lib;
 
 public:
-    p2c_liblist(){};
+    p2c_liblist(){this->loadModule();};
     ~p2c_liblist(){};
     void loadModule();
 };
