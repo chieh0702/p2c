@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream> // TODO: log file
 enum alert_level
 {
     DEBUG,

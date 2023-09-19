@@ -26,4 +26,5 @@ void p2c_argtable::parserArgs(int argc, char const *argv[])
 	std::vector<std::string> tokens;
 	for (int i = 1; i < argc; i++)
 		tokens.push_back(argv[i]);
+	// TODO: parser to table
 }

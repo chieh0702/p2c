@@ -152,3 +152,11 @@ npm install
 ls
 npm run core
 exit
+ls
+cd mnt/
+ls
+cd /home/
+ls
+npm
+exit
+exit

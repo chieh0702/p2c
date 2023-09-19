@@ -53,5 +53,6 @@
         "ratio": "cpp",
         "iomanip": "cpp",
         "sstream": "cpp"
-    }
+    },
+    "makefile.makefilePath": "/root/vscode/src/core"
 }

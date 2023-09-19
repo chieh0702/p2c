@@ -32,13 +32,13 @@ p2c_liblist::~p2c_liblist()
     // free all library
     for (void *_lib : _core_lib)
         dlclose(_lib);
-    for (void *_lib : _mod_lib)
+    for (void *_lib : _mod_lib) 
         dlclose(_lib);
 }
 
 void p2c_liblist::loadModule()
 {
-    DIR *dirp = opendir("./");
+    DIR *dirp = opendir("./"); // TODO: change to /lib/p2c/modure/
     if (!dirp)
     {
         std::cerr << "Open moudule directory failed: " << strerror(errno) << '\n';

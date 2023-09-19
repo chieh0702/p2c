@@ -1,3 +1,3 @@
 FROM debian
-COPY ["/usr", "/root"]
-CMD sh -c pwd
+COPY ["/etc/nginx", "/etc/nginx"]
+EXPOSE 80/tcp

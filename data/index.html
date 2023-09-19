@@ -1,0 +1,28 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+</head>
+
+<body>
+    <input type="text" id="text" />
+    <input type="button" value="send" onclick="proc()" id="send_btn" />
+    <script>
+        const input = document.getElementById('text');
+        const send = document.getElementById('send_btn');
+        input.addEventListener("keypress", (event) => {
+            if (event.key === "Enter")
+                send.click();
+        })
+        function proc() {
+            if (input.value.toString() != "") {
+                var xhr = new XMLHttpRequest();
+                xhr.open('post', window.location.href.toString() + 'input');
+                xhr.send(input.value.toString());
+                input.value = "";
+            }
+        }
+    </script>
+</body>
+
+</html>
