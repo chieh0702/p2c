@@ -1,4 +1,3 @@
-# TODO
 FROM debian:stable
-COPY ["./he lo" , "/usr/"]
+RUN apt-get update;apt-get install g++ nodejs
 CMD bash

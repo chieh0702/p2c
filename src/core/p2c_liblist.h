@@ -16,7 +16,7 @@
 class p2c_liblist
 {
 private:
-    std::vector<void *> _core_lib;
+    std::vector<void *> _gen_lib;
     std::vector<void *> _mod_lib;
 
 public:
@@ -30,7 +30,7 @@ public:
 p2c_liblist::~p2c_liblist()
 {
     // free all library
-    for (void *_lib : _core_lib)
+    for (void *_lib : _gen_lib)
         dlclose(_lib);
     for (void *_lib : _mod_lib) 
         dlclose(_lib);
@@ -53,14 +53,14 @@ void p2c_liblist::loadModule()
             continue;
         // push dll point to vector
         if ((memcmp(entry->d_name, "p2c_core", 8) == 0) && (memcmp(strchr(entry->d_name, '.'), ".so", 3) == 0))
-            this->_core_lib.push_back(dlopen(entry->d_name, RTLD_LAZY));
+            this->_gen_lib.push_back(dlopen(entry->d_name, RTLD_LAZY));
         else if ((memcmp(entry->d_name, "p2c_mod", 7) == 0) && (memcmp(strchr(entry->d_name, '.'), ".so", 3) == 0))
             this->_mod_lib.push_back(dlopen(entry->d_name, RTLD_LAZY));
         else
             continue;
-        if ((_core_lib.back() == NULL))
+        if ((_gen_lib.back() == NULL))
         {
-            _core_lib.pop_back();
+            _gen_lib.pop_back();
             p2c_alerter::alerting(alert_level::ERROR, strcat((char *)"core libaray open failed:", entry->d_name));
         }
         if ((_mod_lib.back() == NULL))
@@ -75,7 +75,7 @@ void p2c_liblist::loadModule()
 void p2c_liblist::callFunction(p2c_argtable argtable)
 {
     // TODO: definition function name and args
-    for (void *_lib : _core_lib);
+    for (void *_lib : _gen_lib);
         //dlclose(_lib);
     for (void *_lib : _mod_lib)
         {

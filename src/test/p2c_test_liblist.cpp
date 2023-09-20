@@ -1,4 +1,4 @@
-#include "../src/p2c_liblist.h"
+#include <p2c_liblist.h>
 
 int main(int argc, char const *argv[])
 {

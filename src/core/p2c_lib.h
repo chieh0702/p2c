@@ -8,6 +8,6 @@
 #include "p2c_argtable.h"
 #endif
 
-extern void p2c_lib_getCommend();
-extern void p2c_mod_entry();
-extern void p2c_gui_entry();
+extern std::vector<std::string> p2c_lib_getCommend();
+extern int p2c_mod_entry();
+extern int p2c_gen_entry();
