@@ -1,17 +1,14 @@
+#ifndef _P2C_LIBLIST_H_
+#define _P2C_LIBLIST_H_
+
 #include <iostream>
 #include <vector>
 #include <dlfcn.h>
 #include <dirent.h>
 #include <cstring>
 
-#ifndef _P2C_ALERTER_H_
-#define _P2C_ALERTER_H_
-#include "p2c_alerter.h"
-#endif
-#ifndef _P2C_ARGTABLE_H_
-#define _P2C_ARGTABLE_H_
-#include "p2c_argtable.h"
-#endif
+#include <p2c_alerter.h>
+#include <p2c_argtable.h>
 
 class p2c_liblist
 {
@@ -20,11 +17,14 @@ private:
     std::vector<void *> _mod_lib;
 
 public:
-    p2c_liblist() { this->loadModule(); };
+    p2c_liblist() { this->loadLibrary(); };
     ~p2c_liblist();
-    void loadModule();
+    void loadLibrary();
     // TODO: call dll function
-    void callFunction(p2c_argtable);
+    void callModFunc(p2c_argtable);
+    void callGenFunc(p2c_argtable);
+    std::vector<std::string> getModCmd();
+    std::vector<std::string> getGenCmd();
 };
 
 p2c_liblist::~p2c_liblist()
@@ -32,11 +32,11 @@ p2c_liblist::~p2c_liblist()
     // free all library
     for (void *_lib : _gen_lib)
         dlclose(_lib);
-    for (void *_lib : _mod_lib) 
+    for (void *_lib : _mod_lib)
         dlclose(_lib);
 }
 
-void p2c_liblist::loadModule()
+void p2c_liblist::loadLibrary()
 {
     DIR *dirp = opendir("./"); // TODO: change to /lib/p2c/modure/
     if (!dirp)
@@ -72,13 +72,18 @@ void p2c_liblist::loadModule()
     closedir(dirp);
 }
 
-void p2c_liblist::callFunction(p2c_argtable argtable)
+void p2c_liblist::callModFunc(p2c_argtable argtable)
 {
-    // TODO: definition function name and args
-    for (void *_lib : _gen_lib);
-        //dlclose(_lib);
+    // dlclose(_lib);
     for (void *_lib : _mod_lib)
-        {
-            dlsym(_lib,"main");
-        }
+    {
+        dlsym(_lib, "p2c_mod_entry");
+    }
 }
+void p2c_liblist::callGenFunc(p2c_argtable argtable)
+{
+    for (void *_lib : _gen_lib)
+        dlsym(_lib, "p2c_gen_entry");
+}
+
+#endif

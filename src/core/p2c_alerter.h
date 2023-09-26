@@ -1,3 +1,6 @@
+#ifndef _P2C_ALERTER_H_
+#define _P2C_ALERTER_H_
+
 #include <iostream>
 #include <fstream> // TODO: log file
 enum alert_level
@@ -52,3 +55,5 @@ public:
         _alerting(level, _str);
     };
 };
+
+#endif

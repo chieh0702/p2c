@@ -3,6 +3,6 @@
 int main(int argc, char const *argv[])
 {
     p2c_liblist libList = p2c_liblist();
-    libList.loadModule();
+    libList.loadLibrary();
     return 0;
 }
