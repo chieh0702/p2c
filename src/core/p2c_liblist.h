@@ -86,4 +86,11 @@ void p2c_liblist::callGenFunc(p2c_argtable argtable)
         dlsym(_lib, "p2c_gen_entry");
 }
 
+std::vector<std::string> p2c_liblist::getModCmd()
+{
+}
+std::vector<std::string> p2c_liblist::getGenCmd()
+{
+}
+
 #endif

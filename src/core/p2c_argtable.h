@@ -28,4 +28,19 @@ void p2c_argtable::initArgs(int argc, char const *argv[])
 	// TODO: parser to table
 }
 
+void p2c_argtable::addArg(std::string name, std::vector<std::string> context)
+{
+	
+}
+
+void p2c_argtable::addArg(std::string name, std::string context)
+{
+
+}
+
+std::vector<std::string> p2c_argtable::getArg(std::string name)
+{
+	
+}
+
 #endif

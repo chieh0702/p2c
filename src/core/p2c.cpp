@@ -1,6 +1,7 @@
 #include <p2c_lib.h>
 
 using namespace std;
+
 int main(int argc, char const *argv[])
 {
     p2c_argtable argTable = p2c_argtable(argc, argv);
