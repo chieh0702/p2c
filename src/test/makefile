@@ -12,4 +12,4 @@ all: $(OUT_FILES)
 	g++ -I $(CORE_PATH) -c $<
 
 clean:
-	- rm $(BIN_FILES) $(OUT_FILES)
+	- cd $(BIN_PATH) && rm $(BIN_FILES)

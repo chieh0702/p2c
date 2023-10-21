@@ -11,4 +11,4 @@ all: $(DLL_FILES)
 	g++ -I $(CORE_PATH) -fPIC -c $<
 
 clean:
-	- rm *.o *.so
+	- rm $(LIB_PATH)/*.so
