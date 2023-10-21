@@ -32,3 +32,4 @@ bool haveGuiCmd(p2c_argtable argTable)
         return true;
     return false;
 }
+
