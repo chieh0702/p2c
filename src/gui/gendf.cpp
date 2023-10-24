@@ -13,7 +13,7 @@ int main(int argc, char const *argv[])
         dockerfile += generator.getline();
     ofstream fout;
     fout.open(generator.getOutput() + "Dockerfile"); // TODO:"/"
-    fout << dockerfile;                              // TODO:commend order
+    fout << dockerfile;                              // TODO:command order
     fout.close();
     if (!generator.getIgnore().empty())
     {

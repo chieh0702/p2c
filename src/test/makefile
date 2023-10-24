@@ -11,5 +11,12 @@ all: $(OUT_FILES)
 .cpp.o:
 	g++ -I $(CORE_PATH) -c $<
 
+argtable: p2c_test_argtable
+	$(BIN_PATH)/$< -arg1 hello --arg2 ppo oop
+	rm $(BIN_PATH)/$<
+p2c_test_argtable: p2c_test_argtable.o
+	g++ -rdynamic -o $(BIN_PATH)/$@ $< -ldl
+	rm $<
+
 clean:
 	- cd $(BIN_PATH) && rm $(BIN_FILES)

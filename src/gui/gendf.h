@@ -156,7 +156,7 @@ std::string ENV_STATE::getline(Generator *generator)
     generator->setState(new NORMAL_STATE());
     return "ENV " + generator->getToken() + "\n";
 }
-std::string FROM_STATE::getline(Generator *generator) // TODO:force commend
+std::string FROM_STATE::getline(Generator *generator) // TODO:force command
 {
     generator->setState(new NORMAL_STATE());
     return "FROM " + generator->getToken() + "\n";
