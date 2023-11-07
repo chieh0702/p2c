@@ -11,13 +11,29 @@
 #include <p2c_alerter.h>
 #include <p2c_argtable.h>
 
+class p2c_mod
+{
+private:
+public:
+    p2c_mod(){};
+    ~p2c_mod(){};
+    virtual int entry() { return entry(""); };
+    virtual int entry(std::string){};
+    virtual std::vector<std::string> getCommand(){};
+};
+
+extern p2c_mod *p2c_create_mod();
+typedef p2c_mod *p2c_create_mod_t();
+extern void p2c_destroy(p2c_mod *entity);
+typedef void p2c_destroy_t(p2c_mod);
+
 class p2c_liblist
 {
 private:
-    std::vector<void *> _mod_lib;
-    std::vector<void *> _gen_lib;
-    std::map<std::string, void *> _mod_map;
-    std::map<std::string, void *> _gen_map;
+    std::map<std::string, p2c_mod *> _mod_map;
+    std::map<std::string, p2c_mod *> _gen_map;
+    std::vector<void *> _opened_lib;
+    std::vector<p2c_mod *> _created_mod;
 
 public:
     p2c_liblist() { this->loadLibrary(); };
@@ -28,16 +44,14 @@ public:
     int callModFunc(std::string);
     int callGenFunc(std::vector<std::string>);
     int callGenFunc(std::string);
-    std::vector<std::string> getModCmd();
-    std::vector<std::string> getGenCmd();
 };
 
 p2c_liblist::~p2c_liblist()
 {
     // free all library
-    for (void *_lib : _gen_lib)
-        dlclose(_lib);
-    for (void *_lib : _mod_lib)
+    for (p2c_mod *mod : _created_mod)
+        delete mod;
+    for (void *_lib : _opened_lib)
         dlclose(_lib);
 }
 
@@ -56,55 +70,56 @@ void p2c_liblist::loadLibrary()
             break;
         if (memcmp(entry->d_name, "p2c", 3) != 0) // ignore otherfile
             continue;
-        // push dll point to vector
-        if ((memcmp(entry->d_name, "p2c_core", 8) == 0) && (memcmp(strchr(entry->d_name, '.'), ".so", 3) == 0))
-            this->_gen_lib.push_back(dlopen(entry->d_name, RTLD_LAZY));
-        else if ((memcmp(entry->d_name, "p2c_mod", 7) == 0) && (memcmp(strchr(entry->d_name, '.'), ".so", 3) == 0))
-            this->_mod_lib.push_back(dlopen(entry->d_name, RTLD_LAZY));
+        // push dll point to map
+        if (((memcmp(entry->d_name, "p2c_mod", 7) == 0) || (memcmp(entry->d_name, "p2c_gen", 7) == 0)) && (memcmp(strchr(entry->d_name, '.'), ".so", 3) == 0))
+        {
+            void *mod = dlopen(entry->d_name, RTLD_LAZY);
+            if (!mod)
+            {
+                p2c_alerter::alerting(alert_level::WARN, strcat((char *)"libaray load failed:", entry->d_name));
+                dlerror();
+                continue;
+            }
+            this->_opened_lib.push_back(mod);
+            p2c_create_mod_t *create_mod = (p2c_create_mod_t *)dlsym(mod, "p2c_create_mod");
+            if (dlerror())
+            {
+                p2c_alerter::alerting(alert_level::WARN, strcat((char *)"libaray open failed:", dlerror()));
+                continue;
+            }
+            p2c_mod *new_mod = create_mod();
+            this->_created_mod.push_back(new_mod);
+            for (std::string key : new_mod->getCommand())
+            {
+                if ((memcmp(entry->d_name, "p2c_mod", 7) == 0))
+                    this->_mod_map[key] = new_mod;
+                else
+                    this->_gen_map[key] = new_mod;
+            }
+        }
         else
             continue;
-        if ((_gen_lib.back() == NULL))
-        {
-            _gen_lib.pop_back();
-            p2c_alerter::alerting(alert_level::ERROR, strcat((char *)"core libaray open failed:", entry->d_name));
-        }
-        if ((_mod_lib.back() == NULL))
-        {
-            _mod_lib.pop_back();
-            p2c_alerter::alerting(alert_level::WARN, strcat((char *)"module libaray open failed:", entry->d_name));
-        }
     }
     closedir(dirp);
 }
 
 int p2c_liblist::callModFunc(std::vector<std::string> args)
 {
-    // dlclose(_lib);
-    for (void *_lib : _mod_lib)
-    {
-        dlsym(_lib, "p2c_mod_entry");
-    }
+    for (std::string arg : args)
+        this->_mod_map[arg]->entry();
+}
+int p2c_liblist::callModFunc(std::string arg)
+{
+    this->_mod_map[arg]->entry();
 }
 int p2c_liblist::callGenFunc(std::vector<std::string> args)
 {
-    for (void *_lib : _gen_lib)
-        dlsym(_lib, "p2c_gen_entry");
+    for (std::string arg : args)
+        this->_gen_map[arg]->entry();
 }
-
-std::vector<std::string> p2c_liblist::getModCmd() //TODO:merge to init
+int p2c_liblist::callGenFunc(std::string arg)
 {
-    for (void *_lib : _mod_lib)
-    {
-        p2c_lib_getCommand_t *getcmd = (p2c_lib_getCommand_t *)dlsym(_lib, "p2c_lib_getCommand");
-        p2c_mod_entry_t *entry = (p2c_mod_entry_t *)dlsym(_lib,"p2c_mod_entry");
-        //TODO:error handle
-        for (std::string key : getcmd())
-            this->_mod_map[key] = entry;
-    }
-}
-std::vector<std::string> p2c_liblist::getGenCmd()
-{
-
+    this->_gen_map[arg]->entry();
 }
 
 #endif

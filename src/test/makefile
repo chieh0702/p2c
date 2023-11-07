@@ -7,16 +7,22 @@ BIN_FILES := $(patsubst %.o,%,$(OBJ_FILES))
 
 all: $(OUT_FILES)
 %.out: %.o
-	g++ -rdynamic -o $(BIN_PATH)/$* $< -ldl
+	g++ -rdynamic -o $* $< -ldl
 .cpp.o:
 	g++ -I $(CORE_PATH) -c $<
 
 argtable: p2c_test_argtable
-	$(BIN_PATH)/$< -arg1 hello --arg2 ppo oop
-	rm $(BIN_PATH)/$<
+	./$< -arg1 hello --arg2 ppo oop
+	make clean
 p2c_test_argtable: p2c_test_argtable.o
-	g++ -rdynamic -o $(BIN_PATH)/$@ $< -ldl
-	rm $<
+	g++ -rdynamic -o $@ $< -ldl
+
+liblist: p2c_test_liblist
+	./$<
+	make clean
+p2c_test_liblist: p2c_test_liblist.o
+	g++ -rdynamic -o $@ $< -ldl
+
 
 clean:
-	- cd $(BIN_PATH) && rm $(BIN_FILES)
+	- rm $(BIN_FILES) $(OBJ_FILES)

@@ -1,12 +1,20 @@
 #include <p2c_lib.h>
 
-extern std::vector<std::string> p2c_lib_getCommand()
+class p2c_gen_dockerfile:public p2c_mod
 {
-    std::vector<std::string> list={"--dockerfile","-df"};
-    return list;
-}
+private:
+    
+public:
+    int entry(std::string);
 
-extern int p2c_gen_entry(std::string)
+};
+
+
+extern p2c_mod *p2c_create_mod()
 {
-    return 0;
+    return new p2c_gen_dockerfile;
+}
+extern void p2c_destroy(p2c_mod *entity)
+{
+    delete entity;
 }

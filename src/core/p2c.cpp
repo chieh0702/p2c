@@ -4,7 +4,7 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    p2c_argtable argTable = p2c_argtable(argc, argv);
+    argTable = p2c_argtable(argc, argv);
     p2c_liblist libList = p2c_liblist();
     while (haveModCmd(argTable, libList)) //TODO:change this
     {
