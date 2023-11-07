@@ -6,25 +6,15 @@ int main(int argc, char const *argv[])
 {
     argTable = p2c_argtable(argc, argv);
     p2c_liblist libList = p2c_liblist();
-    while (haveModCmd(argTable, libList)) //TODO:change this
+    while (libList.callModFunc(argTable.getArg("command")))
     {
-        libList.callModFunc(argTable);
         if (haveGuiCmd(argTable))
             runGUI();
     }
-    libList.callGenFunc(argTable);
+    libList.callGenFunc(argTable.getArg("command"));
     return 0;
 }
 
-bool haveModCmd(p2c_argtable argTable, p2c_liblist libList)
-{
-    vector<string> modCmd = libList.getModCmd();
-    vector<string> curCmd = argTable.getArg("command");
-    for (string cmd : curCmd)
-        if (find(modCmd.begin(), modCmd.end(), cmd) != modCmd.end())
-            return true;
-    return false;
-}
 bool haveGuiCmd(p2c_argtable argTable)
 {
     vector<string> curCmd = argTable.getArg("command");

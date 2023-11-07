@@ -39,7 +39,6 @@ public:
     p2c_liblist() { this->loadLibrary(); };
     ~p2c_liblist();
     void loadLibrary();
-    // TODO: call dll function
     int callModFunc(std::vector<std::string>);
     int callModFunc(std::string);
     int callGenFunc(std::vector<std::string>);
