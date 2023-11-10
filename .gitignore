@@ -1,2 +1,4 @@
 /bin
 /lib
+/src/.local
+/src/.npm

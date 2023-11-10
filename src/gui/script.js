@@ -82,3 +82,5 @@ function genListBox(name, context) {
 
 genListBox("Command", ["--gui", "--website"]);
 genListBox("From", ["debian"]);
+genListBox("test0", ["debian",0,1,2,3]);
+genListBox("test1", ["debian",1,2,3]);
