@@ -1,0 +1,39 @@
+.titleview {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 3em;
+}
+.titleview *{
+    padding-left: 1em;
+}
+
+.listbox {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+  border: 1px black solid;
+  border-radius: 0.5em;
+  border-color: black;
+}
+.listbox div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-right: 1em;
+}
+.listbox a,
+.listbox input {
+  flex-grow: 1;
+  text-align: center;
+  line-height: 2em;
+  height: 2em;
+  width: max-content;
+}
+.listbox div:hover {
+  background-color: lightgrey;
+}
+input[type="button"] {
+    height: 2em;
+    width: 6em;
+}

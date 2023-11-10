@@ -10,22 +10,7 @@
 
 #include <p2c_alerter.h>
 #include <p2c_argtable.h>
-
-class p2c_mod
-{
-private:
-public:
-    p2c_mod(){};
-    ~p2c_mod(){};
-    virtual int entry() { return entry(""); };
-    virtual int entry(std::string){};
-    virtual std::vector<std::string> getCommand(){};
-};
-
-extern p2c_mod *p2c_create_mod();
-typedef p2c_mod *p2c_create_mod_t();
-extern void p2c_destroy(p2c_mod *entity);
-typedef void p2c_destroy_t(p2c_mod);
+#include <p2c_mod.h>
 
 class p2c_liblist
 {
@@ -104,21 +89,29 @@ void p2c_liblist::loadLibrary()
 
 int p2c_liblist::callModFunc(std::vector<std::string> args)
 {
+    int sum = 0;
     for (std::string arg : args)
-        this->_mod_map[arg]->entry();
+        sum += this->callModFunc(arg);
+    return sum;
 }
 int p2c_liblist::callModFunc(std::string arg)
 {
-    this->_mod_map[arg]->entry();
+    if (this->_mod_map.count(arg))
+        return !this->_mod_map[arg]->entry();
+    else
+        return 0;
 }
 int p2c_liblist::callGenFunc(std::vector<std::string> args)
 {
     for (std::string arg : args)
-        this->_gen_map[arg]->entry();
+        this->callGenFunc(arg);
 }
 int p2c_liblist::callGenFunc(std::string arg)
 {
-    this->_gen_map[arg]->entry();
+    if (this->_mod_map.count(arg))
+        return !this->_gen_map[arg]->entry();
+    else
+        return 0;
 }
 
 #endif

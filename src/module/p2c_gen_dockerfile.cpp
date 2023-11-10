@@ -14,7 +14,3 @@ extern p2c_mod *p2c_create_mod()
 {
     return new p2c_gen_dockerfile;
 }
-extern void p2c_destroy(p2c_mod *entity)
-{
-    delete entity;
-}

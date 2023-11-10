@@ -29,8 +29,16 @@ const server = http.createServer((req, res) => {
       res.end();
     });
   } else {
-    res.statusCode = 404;
-    res.end('not found');
+    fs.readFile('.' + req.url, (err, html) => { //TODO:每次req都讀一次(IO效率差)，應改為const，只載入一次
+      if (err) {
+        res.statusCode = 404;
+        res.end('not found');
+      } else {
+        res.statusCode = 200;
+        res.write(html);
+      }
+      res.end();
+    })
   }
 });
 

@@ -12,7 +12,9 @@ all: $(OUT_FILES)
 	g++ -I $(CORE_PATH) -c $<
 
 argtable: p2c_test_argtable
+	@echo "\e[1;32m"
 	./$< -arg1 hello --arg2 ppo oop
+	@echo "\e[0m"
 	make clean
 p2c_test_argtable: p2c_test_argtable.o
 	g++ -rdynamic -o $@ $< -ldl
