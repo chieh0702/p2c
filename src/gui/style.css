@@ -12,9 +12,8 @@
   display: flex;
   flex-direction: column;
   padding: 0.5em;
-  border: 1px black solid;
+  border: 1px rgb(110, 132, 211) solid;
   border-radius: 0.5em;
-  border-color: black;
 }
 .listbox div {
   display: flex;
@@ -31,9 +30,19 @@
   width: max-content;
 }
 .listbox div:hover {
-  background-color: lightgrey;
+  background-color: rgb(211, 211, 211);
 }
 input[type="button"] {
     height: 2em;
     width: 6em;
+    border-radius: 0.5em;
+    border: 1px rgb(110, 132, 211) solid;
+    background-color: rgb(183, 207, 251);
 }
+ 
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
