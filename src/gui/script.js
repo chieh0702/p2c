@@ -5,6 +5,13 @@ function proc() {
     xhr.send("close");
 }
 
+const title = document.getElementById('title');
+const plusicon = new_plusicon();
+plusicon.addEventListener("click", () => {
+    genListBox("",[]);
+});
+title.appendChild(plusicon);
+
 const listbox_group = document.getElementById("listbox_group");
 function genListBox(name, context) {
     const listgp = document.createElement("div");
@@ -33,14 +40,8 @@ function genListBox(name, context) {
         textinput.focus();
     });
     titleview.appendChild(editicon);
-    const plusicon = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-    plusicon.setAttribute("height", "1em");
-    plusicon.setAttribute("viewBox", "0 0 448 512");
-    const pluspath = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-    pluspath.setAttribute("d", "M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z");
-    plusicon.appendChild(pluspath);
+    const plusicon = new_plusicon();
     plusicon.addEventListener("click", () => {
-        console.log("hi");
         listbox.appendChild(new_viewbox());
     });
     titleview.appendChild(plusicon);
@@ -95,6 +96,15 @@ function new_trashicon() {
     return trashicon;
 }
 
+function new_plusicon() {
+    const plusicon = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+    plusicon.setAttribute("height", "1em");
+    plusicon.setAttribute("viewBox", "0 0 448 512");
+    const pluspath = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    pluspath.setAttribute("d", "M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z");
+    plusicon.appendChild(pluspath);
+    return plusicon;
+}
 
 genListBox("Command", ["--gui", "--website"]);
 genListBox("From", ["debian"]);

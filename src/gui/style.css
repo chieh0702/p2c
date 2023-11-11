@@ -44,5 +44,8 @@ input[type="button"] {
   display: flex;
   align-items: center;
   justify-content: center;
-}
 
+}
+.center svg{
+  padding-left: 1em;
+}
