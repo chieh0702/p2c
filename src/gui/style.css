@@ -4,11 +4,11 @@
   align-items: center;
   height: 3em;
   font-family: "Modern", "Noto Sans CJK TC", "Microsoft JhengHei", PingFang, STHeiti, sans-serif, serif;
-
 }
 
 .titleview * {
   padding-left: 1em;
+
 
 }
 
@@ -27,6 +27,7 @@
   flex-direction: row;
   align-items: center;
   padding-right: 1em;
+ 
 }
 
 .listbox a,
@@ -40,6 +41,7 @@
 
 .listbox div:hover {
   background-color: rgb(180, 180, 180);
+
 }
 
 input[type="button"] {
@@ -56,21 +58,24 @@ input[type="button"] {
   display: flex;
   align-items: center;
   font-family: "Century","Noto Sans CJK TC", "Microsoft JhengHei", PingFang, STHeiti, sans-serif, serif;
+ 
 }
 
 .center svg {
   padding-left: 1em;
-  margin-top: -8px;
+  margin-top: -8px; 
 
 }
 
-body {
+body{
   background-image: url('https://i.postimg.cc/900xL5w9/pexels-dominika-roseclay-1036808.jpg');
+  
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
   background-color: rgba(0, 0, 0, 0.122);
+   
   background-blend-mode: multiply;
-
 }
+
