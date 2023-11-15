@@ -8,8 +8,6 @@
 
 .titleview * {
   padding-left: 1em;
-
-
 }
 
 .listbox {
@@ -19,7 +17,6 @@
   border: 1px #182da7e8 solid;
   border-radius: 0.5em;
   background-color: rgba(240, 248, 255, 0.51);
-
 }
 
 .listbox div {
@@ -27,7 +24,6 @@
   flex-direction: row;
   align-items: center;
   padding-right: 1em;
-
 }
 
 .listbox a,
@@ -40,8 +36,7 @@
 }
 
 .listbox div:hover {
-  background-color: rgb(180, 180, 180);
-
+  background-color: rgb(211, 211, 211);
 }
 
 input[type="button"] {
@@ -51,20 +46,17 @@ input[type="button"] {
   border: 1px rgb(8, 41, 157) solid;
   background-color: #0e1a61ba;
   font-family: "Noto Sans CJK TC", "Microsoft JhengHei", PingFang, STHeiti, sans-serif, serif;
-
 }
 
 .center {
   display: flex;
   align-items: center;
   font-family: "Century", "Noto Sans CJK TC", "Microsoft JhengHei", PingFang, STHeiti, sans-serif, serif;
-
 }
 
 .center svg {
   padding-left: 1em;
   margin-top: -8px;
-
 }
 
 body {
@@ -74,6 +66,5 @@ body {
   background-position: center;
   background-size: cover;
   background-color: rgba(0, 0, 0, 0.122);
-
   background-blend-mode: multiply;
 }
