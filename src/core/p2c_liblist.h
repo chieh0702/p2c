@@ -41,10 +41,10 @@ p2c_liblist::~p2c_liblist()
 
 void p2c_liblist::loadLibrary()
 {
-    DIR *dirp = opendir("./"); // TODO: change to /lib/p2c/modure/
+    DIR *dirp = opendir("/root/vscode/lib"); // TODO: change to /lib/p2c/module/
     if (!dirp)
     {
-        std::cerr << "Open moudule directory failed: " << strerror(errno) << '\n';
+        std::cerr << "Open module directory failed: " << strerror(errno) << '\n';
         return;
     }
     while (1)
@@ -52,7 +52,7 @@ void p2c_liblist::loadLibrary()
         dirent *entry = readdir(dirp);
         if (!entry)
             break;
-        if (memcmp(entry->d_name, "p2c", 3) != 0) // ignore otherfile
+        if (memcmp(entry->d_name, "p2c", 3) != 0) // ignore otherFile
             continue;
         // push dll point to map
         if (((memcmp(entry->d_name, "p2c_mod", 7) == 0) || (memcmp(entry->d_name, "p2c_gen", 7) == 0)) && (memcmp(strchr(entry->d_name, '.'), ".so", 3) == 0))
@@ -60,7 +60,7 @@ void p2c_liblist::loadLibrary()
             void *mod = dlopen(entry->d_name, RTLD_LAZY);
             if (!mod)
             {
-                p2c_alerter::alerting(alert_level::WARN, strcat((char *)"libaray load failed:", entry->d_name));
+                p2c_alerter::alerting(alert_level::WARN, "library load failed:", entry->d_name);
                 dlerror();
                 continue;
             }
@@ -68,7 +68,7 @@ void p2c_liblist::loadLibrary()
             p2c_create_mod_t *create_mod = (p2c_create_mod_t *)dlsym(mod, "p2c_create_mod");
             if (dlerror())
             {
-                p2c_alerter::alerting(alert_level::WARN, strcat((char *)"libaray open failed:", dlerror()));
+                p2c_alerter::alerting(alert_level::WARN, "library open failed:", dlerror());
                 continue;
             }
             p2c_mod *new_mod = create_mod();
@@ -85,6 +85,7 @@ void p2c_liblist::loadLibrary()
             continue;
     }
     closedir(dirp);
+    p2c_alerter::alerting(alert_level::DEBUG, "loaded", _created_mod.size(), "library.");
 }
 
 int p2c_liblist::callModFunc(std::vector<std::string> args)

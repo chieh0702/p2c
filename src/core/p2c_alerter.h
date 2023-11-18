@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream> // TODO: log file
+#include <sstream>
 enum alert_level
 {
     DEBUG,
@@ -54,6 +55,26 @@ public:
         std::string _str = message;
         _alerting(level, _str);
     };
+    template <typename t>
+    static void alerting(alert_level level, std::string message, t arg)
+    {
+        std::stringstream ss;
+        ss << arg;
+        std::string _str;
+        ss >> _str;
+        message += " " + _str;
+        alerting(level, message);
+    }
+    template <typename t, typename... ts>
+    static void alerting(alert_level level, std::string message, t arg, ts... args)
+    {
+        std::stringstream ss;
+        ss << arg;
+        std::string _str;
+        ss >> _str;
+        message += " " + _str;
+        alerting(level, message, args...);
+    }
 };
 
 #endif

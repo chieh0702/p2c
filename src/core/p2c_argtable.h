@@ -21,7 +21,7 @@ public:
 	std::vector<std::string> getArg(std::string);
 	std::string getJSON();
 	// TODO:json to argtable
-	// void paserJSON(std::string);
+	// void parserJSON(std::string);
 };
 
 void p2c_argtable::initArgs(int argc, char const *argv[])

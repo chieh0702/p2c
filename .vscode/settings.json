@@ -55,5 +55,10 @@
         "sstream": "cpp",
         "map": "cpp"
     },
-    "makefile.makefilePath": "/root/vscode/src/core"
+    "makefile.makefilePath": "/root/vscode/src/core",
+    "cSpell.ignoreWords": [
+        "argtable",
+        "liblist",
+        "tempstr"
+    ]
 }

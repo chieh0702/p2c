@@ -5,7 +5,7 @@ OBJ_FILES := $(patsubst %.cpp,%.o,$(SRC_FILES))
 OUT_FILES := $(patsubst %.o,%.out,$(OBJ_FILES))
 BIN_FILES := $(patsubst %.o,%,$(OBJ_FILES))
 
-all: $(OUT_FILES)
+all: argtable liblist 
 %.out: %.o
 	g++ -rdynamic -o $* $< -ldl
 .cpp.o:
@@ -25,6 +25,11 @@ liblist: p2c_test_liblist
 p2c_test_liblist: p2c_test_liblist.o
 	g++ -rdynamic -o $@ $< -ldl
 
+mod_normal: p2c_test_mod_normal
+	./$< -f debian -c /bin:/bin
+p2c_test_mod_normal: p2c_test_mod_normal.o
+	g++ -rdynamic $< -o $@ -ldl
+	rm $<
 
 clean:
 	- rm $(BIN_FILES) $(OBJ_FILES)
