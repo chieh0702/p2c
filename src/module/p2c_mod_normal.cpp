@@ -18,32 +18,27 @@ std::vector<std::string> split(std::string str, std::string pattern)
 
 class p2c_mod_normal : public p2c_mod
 {
-private:
-    /* data */
 public:
     p2c_mod_normal(){};
     ~p2c_mod_normal(){};
-    virtual int entry(std::string args) override;
+    virtual int entry(std::string, std::string) override;
     virtual std::vector<std::string> getCommand() override;
 };
 
-extern p2c_mod *p2c_create_mod()
+extern "C" p2c_mod *p2c_create_mod()
 {
     return new p2c_mod_normal;
 }
 
-int p2c_mod_normal::entry(std::string args)
+int p2c_mod_normal::entry(std::string cmd, std::string token)
 {
-    std::size_t pos = args.find(" ");
-    std::string cmd = args.substr(0, pos);
-    std::string token = args.substr(pos + 1);
     if (cmd == "-a" || cmd == "--add")
     {
         std::vector<std::string> argv = split(token, ":");
         if (argv.size() == 2)
             argTable.addArg("ADD", argv);
         else
-            p2c_alerter::alerting(alert_level::FATAL, "Usage: p2c [-a|--add] SOURCE:DEST\n");
+            p2c_alerter::alerting(ERROR, "Usage: p2c [-a|--add] SOURCE:DEST\n");
     }
     else if (cmd == "-c" || cmd == "--copy")
     {
@@ -51,7 +46,7 @@ int p2c_mod_normal::entry(std::string args)
         if (argv.size() == 2)
             argTable.addArg("COPY", argv);
         else
-            p2c_alerter::alerting(alert_level::FATAL, "Usage: p2c [-c|--copy] SOURCE:DEST\n");
+            p2c_alerter::alerting(ERROR, "Usage: p2c [-c|--copy] SOURCE:DEST\n");
     }
     else if (cmd == "-e" || cmd == "--env")
     {
@@ -59,64 +54,65 @@ int p2c_mod_normal::entry(std::string args)
         if (argv.size() == 2)
             argTable.addArg("COPY", argv);
         else
-            p2c_alerter::alerting(alert_level::FATAL, "Usage: p2c [-e|--env] \"KEY=VALUE\"\n");
+            p2c_alerter::alerting(ERROR, "Usage: p2c [-e|--env] \"KEY=VALUE\"\n");
     }
     else if (cmd == "-f" || cmd == "--from")
     {
         if (token != "")
             argTable.addArg("FROM", token);
         else
-            p2c_alerter::alerting(alert_level::FATAL, "Usage: p2c [-f|--from] IMAGE_NAME[:TAG]\n");
+            p2c_alerter::alerting(ERROR, "Usage: p2c [-f|--from] IMAGE_NAME[:TAG]\n");
     }
     else if (cmd == "-h" || cmd == "--help")
     {
-        // TODO:show help
+        std::cout << "help/n"; // TODO:show help
     }
     else if (cmd == "-i" || cmd == "--ignore")
     {
         if (token != "")
             argTable.addArg("IGNORE", token);
         else
-            p2c_alerter::alerting(alert_level::FATAL, "Usage: p2c [-i|--ignore] \"CONTEXT\"\n");
+            p2c_alerter::alerting(ERROR, "Usage: p2c [-i|--ignore] \"CONTEXT\"\n");
     }
     else if (cmd == "-m" || cmd == "--cmd")
     {
         if (token != "")
             argTable.addArg("CMD", token);
         else
-            p2c_alerter::alerting(alert_level::FATAL, "Usage: p2c [-m|--cmd] \"COMMAND\"\n");
+            p2c_alerter::alerting(ERROR, "Usage: p2c [-m|--cmd] \"COMMAND\"\n");
     }
     else if (cmd == "-n" || cmd == "--entrypoint")
     {
         if (token != "")
             argTable.addArg("ENTRYPOINT", token);
         else
-            p2c_alerter::alerting(alert_level::FATAL, "Usage: p2c [-n|--entrypoint] \"COMMAND\"\n");
+            p2c_alerter::alerting(ERROR, "Usage: p2c [-n|--entrypoint] \"COMMAND\"\n");
     }
     else if (cmd == "-o" || cmd == "--output")
     {
         if (token != "")
             argTable.addArg("OUTPUT", token);
         else
-            p2c_alerter::alerting(alert_level::FATAL, "Usage: p2c [-o|--output] \"DIR\"\n");
+            p2c_alerter::alerting(ERROR, "Usage: p2c [-o|--output] \"DIR\"\n");
     }
     else if (cmd == "-p" || cmd == "--expose")
     {
         if (token != "")
             argTable.addArg("EXPOSE", token);
         else
-            p2c_alerter::alerting(alert_level::FATAL, "Usage: p2c [-p|--expose] PORT[/TYPE]\n");
+            p2c_alerter::alerting(ERROR, "Usage: p2c [-p|--expose] PORT[/TYPE]\n");
     }
     else if (cmd == "-r" || cmd == "--run")
     {
         if (token != "")
             argTable.addArg("RUN", token);
         else
-            p2c_alerter::alerting(alert_level::FATAL, "Usage: p2c [-r|--run] \"COMMAND\"\n");
+            p2c_alerter::alerting(ERROR, "Usage: p2c [-r|--run] \"COMMAND\"\n");
     }
     else
     {
-        p2c_alerter::alerting(alert_level::ERROR,"Usage: p2c [options]\n");
+        p2c_alerter::alerting(ERROR, "Usage: p2c [options]\n");
+        return 1;
     }
     return 0;
 }
@@ -135,4 +131,5 @@ std::vector<std::string> p2c_mod_normal::getCommand()
         "-o", "--output",
         "-p", "--expose",
         "-r", "--run"};
+    return cmd;
 }

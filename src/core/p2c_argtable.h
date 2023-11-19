@@ -34,7 +34,7 @@ void p2c_argtable::initArgs(int argc, char const *argv[])
 		case 0:
 			state = 1;
 			tempstr.clear();
-			tempstr += argv[i];
+			tempstr = argv[i];
 			break;
 		case 1:
 			if (argv[i][0] == '-')
@@ -65,7 +65,13 @@ void p2c_argtable::addArg(std::string name, std::string context)
 
 std::vector<std::string> p2c_argtable::getArg(std::string name)
 {
-	return this->_args[name];
+	if (_args.count(name))
+		return this->_args[name];
+	else
+	{
+		p2c_alerter::alerting(INFO, "map '_args' hasn't key =", name);
+		return std::vector<std::string>();
+	}
 }
 
 std::string p2c_argtable::getJSON()

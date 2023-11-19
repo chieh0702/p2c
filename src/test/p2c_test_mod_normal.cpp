@@ -1,3 +1,5 @@
+#define _ALERT_LEVEL_ 0
+
 #include <p2c_lib.h>
 
 #include <iostream>
@@ -7,11 +9,15 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
+    p2c_liblist libList;
     argTable = p2c_argtable(argc, argv);
-    p2c_liblist libList = p2c_liblist();
-    while (libList.callModFunc(argTable.getArg("command")))
+    cout << argTable.getJSON() << '\n';
+    while (argTable.getArg("command").size())
     {
-        cout<<argTable.getJSON();
+        libList.callModFunc(argTable.getArg("command"));
+        cout << argTable.getJSON();
     }
+    cout << argTable.getJSON() << '\n';
+    p2c_alerter::alerting(DEBUG, "Test done");
     return 0;
 }

@@ -7,8 +7,8 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    argTable = p2c_argtable(argc, argv);
     p2c_liblist libList = p2c_liblist();
+    argTable = p2c_argtable(argc, argv);
     while (libList.callModFunc(argTable.getArg("command")))
     {
         if (haveGuiCmd(argTable))
