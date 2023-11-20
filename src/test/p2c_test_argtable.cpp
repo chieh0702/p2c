@@ -11,11 +11,12 @@ int main(int argc, char const *argv[])
     args.initArgs(argc, argv);
     cout << "command{";
     queue<string> *command = args.getArg("command");
-    while (!command->empty())
-    {
-        cout << '\"' << command->front() << "\"|";
-        command->pop();
-    }
+    if (command)
+        while (!command->empty())
+        {
+            cout << '\"' << command->front() << "\"|";
+            command->pop();
+        }
     cout << "}\n\n";
     cout << "addArg 'say_hello' 'vector test'\n";
     args.addArg("say_hello", "hello tim");

@@ -60,5 +60,6 @@
         "argtable",
         "liblist",
         "tempstr"
-    ]
+    ],
+    "explorer.confirmDelete": false
 }

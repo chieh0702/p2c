@@ -7,22 +7,19 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    p2c_liblist libList = p2c_liblist();
-    argTable = p2c_argtable(argc, argv);
-    while (libList.callModFunc(argTable.getArg("command")))
-    {
-        if (haveGuiCmd(argTable))
-            runGUI();
-    }
-    libList.callGenFunc(argTable.getArg("command"));
+    p2c_liblist libList;
+    argTable = new p2c_argtable;
+    argTable->initArgs(argc, argv);
+    queue<string> *command = argTable->getArg("command");
+    if (command)
+        while (!command->empty()) // TODO:What if 'command' leaves something like --gui, -h, gen_cmd etc...
+        {
+            if (command->front() == "--gui")
+                runGUI();
+            else
+                libList.callModFunc(command->front());
+            command->pop();
+        }
+    //libList.callGenFunc(argTable->getArg("command")); //TODO
     return 0;
 }
-
-bool haveGuiCmd(p2c_argtable argTable)
-{
-    vector<string> curCmd = argTable.getArg("command");
-    if (find(curCmd.begin(), curCmd.end(), "--gui") != curCmd.end())
-        return true;
-    return false;
-}
-

@@ -3,4 +3,4 @@
 #include <p2c_argtable.h>
 #include <p2c_gui.h>
 
-extern p2c_argtable argTable;
+p2c_argtable *argTable;
