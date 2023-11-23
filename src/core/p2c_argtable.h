@@ -84,7 +84,7 @@ public:
 	void parserJSON(std::string);
 };
 
-// ex. path -f debian -c /bin:/bin --gui
+// store args to 'init_args'
 void p2c_argtable::initArgs(int argc, char const *argv[])
 {
 	int state = 0;
@@ -100,7 +100,7 @@ void p2c_argtable::initArgs(int argc, char const *argv[])
 		case 1:
 			if (argv[i][0] == '-')
 			{
-				this->addArg("command", tempstr);
+				this->addArg("init_args", tempstr);
 				i--;
 				state = 0;
 				break;
@@ -112,8 +112,8 @@ void p2c_argtable::initArgs(int argc, char const *argv[])
 			break;
 		}
 	if (!tempstr.empty())
-		this->addArg("command", tempstr);
-	p2c_alerter::alerting(DEBUG, "'p2c_argtable':116: success initArgs");
+		this->addArg("init_args", tempstr);
+	p2c_alerter::alerting(DEBUG, "'p2c_argtable':116: success init_args");
 }
 
 void p2c_argtable::addArg(std::string name, std::vector<std::string> contexts)
@@ -157,6 +157,8 @@ std::string p2c_argtable::getJSON()
 	bool first_key = true;
 	for (auto &n : *_args)
 	{
+		if (n.second->empty())
+			continue;
 		if (first_key)
 		{
 			first_key = false;
@@ -166,7 +168,7 @@ std::string p2c_argtable::getJSON()
 			JSON += ",\"" + n.first + "\":[";
 		bool first_val = true;
 		std::queue<std::string> duplicate(*n.second);
-		while (!duplicate.empty())
+		do
 		{
 			if (first_val)
 			{
@@ -176,7 +178,7 @@ std::string p2c_argtable::getJSON()
 			else
 				JSON += ",\"" + duplicate.front() + "\"";
 			duplicate.pop();
-		}
+		} while (!duplicate.empty());
 		JSON += "]";
 	}
 	JSON += "}";

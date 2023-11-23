@@ -52,7 +52,7 @@ int p2c_mod_normal::entry(std::string cmd, std::string token)
     {
         std::vector<std::string> argv = split(token, "=");
         if (argv.size() == 2)
-            argTable->addArg("COPY", argv);
+            argTable->addArg("ENV", argv);
         else
             p2c_alerter::alerting(ERROR, "Usage: p2c [-e|--env] \"KEY=VALUE\"\n");
     }

@@ -5,11 +5,11 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-echo >> "$1"
+echo >>"$1"
 
 regex="(.*)alerting(.*)':([0-9]+): (.*)"
 
-output_filename="out.file"
+output_filename="${1}.out"
 
 while IFS= read -r line; do
     if [[ $line =~ $regex ]]; then
@@ -18,20 +18,27 @@ while IFS= read -r line; do
         hand2="${BASH_REMATCH[2]}"
         old_line_number="${BASH_REMATCH[3]}"
         tail="${BASH_REMATCH[4]}"
-        
+
         new_line_number=$(grep -n "alerting" "$1" | grep "$tail" | cut -d: -f1)
-        
+
         modified_line="${hand1}alerting$hand2':$new_line_number: $tail"
-        
-        echo "$modified_line" >> $output_filename
+
+        echo "$modified_line" >>$output_filename
     else
-        echo "$line" >> $output_filename
+        echo "$line" >>$output_filename
     fi
-done < "$1"
+done <"$1"
+
+sed -i -e '${/^$/d;}' "$1"
+sed -i -e '${/^$/d;}' "$output_filename"
+
+if diff -q "$1" "$output_filename"; then
+    rm "$output_filename"
+    exit 0
+fi
 
 diff --color -uw "$1" "$output_filename"
-
-echo "approve change (y/n)"
+echo -ne "approve\e[1;34m" $1 "\e[0mchange (y/n): "
 read key
 if [ $key = "y" ]; then
     mv "$output_filename" "$1"

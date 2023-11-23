@@ -9,8 +9,8 @@ int main(int argc, char const *argv[])
 {
     p2c_argtable args;
     args.initArgs(argc, argv);
-    cout << "command{";
-    queue<string> *command = args.getArg("command");
+    cout << "init_args{";
+    queue<string> *command = args.getArg("init_args");
     if (command)
         while (!command->empty())
         {

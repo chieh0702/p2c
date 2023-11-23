@@ -10,16 +10,39 @@ int main(int argc, char const *argv[])
     p2c_liblist libList;
     argTable = new p2c_argtable;
     argTable->initArgs(argc, argv);
-    queue<string> *command = argTable->getArg("command");
-    if (command)
-        while (!command->empty()) // TODO:What if 'command' leaves something like --gui, -h, gen_cmd etc...
+    bool gui = false;
+    queue<string> *init_args = argTable->getArg("init_args");
+    if (init_args)
+        while (!init_args->empty())
         {
-            if (command->front() == "--gui")
-                runGUI();
+            if (init_args->front() == "--gui")
+                gui = true;
+            else if (libList.mod_count(init_args->front()))
+                argTable->addArg("mod_cmd", init_args->front());
+            else if (libList.gen_count(init_args->front()))
+                argTable->addArg("gen_cmd", init_args->front());
             else
-                libList.callModFunc(command->front());
-            command->pop();
+                p2c_alerter::alerting(ERROR, "Usage: p2c [options]\n");
+            init_args->pop();
         }
-    //libList.callGenFunc(argTable->getArg("command")); //TODO
+    queue<string> *mod_cmd = argTable->getArg("mod_cmd");
+    while (mod_cmd)
+    {
+        while (!mod_cmd->empty())
+        {
+            libList.callModFunc(mod_cmd->front());
+            mod_cmd->pop();
+        }
+        if (gui)
+            runGUI();
+        mod_cmd = argTable->getArg("mod_cmd");
+    }
+    queue<string> *gen_cmd = argTable->getArg("gen_cmd");
+    if (gen_cmd)
+        while (!gen_cmd->empty())
+        {
+            libList.callGenFunc(gen_cmd->front());
+            gen_cmd->pop();
+        }
     return 0;
 }

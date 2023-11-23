@@ -31,7 +31,7 @@ p2c_test_liblist: p2c_test_liblist.o
 
 mod_normal: p2c_test_mod_normal
 	@ $(COLOR_GREEN)
-	- ./$< -f debian -c /bin:/bin
+	- ./$< --website --dockerfile -f debian -c /bin:/bin -a /root/p2c:/root --env "PATH=/bin" -m "curl ifconfig.me >pubip.info" -r "apt update;apt install curl" -p 8080/TCP
 	@ $(COLOR_RESET)
 	@ make clean	
 p2c_test_mod_normal: p2c_test_mod_normal.o

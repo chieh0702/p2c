@@ -26,6 +26,22 @@ public:
     void loadLibrary();
     int callModFunc(std::string);
     int callGenFunc(std::string);
+    bool mod_count(std::string arg)
+    {
+        std::size_t pos = arg.find(" ");
+        std::string key = arg;
+        if (pos != std::string::npos)
+            key = arg.substr(0, pos);
+        return _mod_map.count(key) == 1 ? true : false;
+    };
+    bool gen_count(std::string arg)
+    {
+        std::size_t pos = arg.find(" ");
+        std::string key = arg;
+        if (pos != std::string::npos)
+            key = arg.substr(0, pos);
+        return _gen_map.count(key) == 1 ? true : false;
+    };
 };
 
 p2c_liblist::~p2c_liblist()
@@ -69,7 +85,7 @@ void p2c_liblist::loadLibrary()
                 continue;
             }
             this->_opened_lib.push_back(mod);
-            p2c_alerter::alerting(DEBUG, "'p2c_liblist':72: library loaded", entry->d_name);
+            p2c_alerter::alerting(DEBUG, "'p2c_liblist':88: library loaded", entry->d_name);
             p2c_create_mod_t *create_mod = (p2c_create_mod_t *)dlsym(mod, "p2c_create_mod");
             const char *dlsym_error = dlerror();
             if (dlsym_error)
@@ -79,7 +95,7 @@ void p2c_liblist::loadLibrary()
             }
             p2c_mod *new_mod = create_mod();
             this->_created_mod.push_back(new_mod);
-            p2c_alerter::alerting(DEBUG, "'p2c_liblist':82: library opened", entry->d_name);
+            p2c_alerter::alerting(DEBUG, "'p2c_liblist':98: library opened", entry->d_name);
             for (std::string key : new_mod->getCommand())
             {
                 if ((memcmp(entry->d_name, "p2c_mod", 7) == 0))
@@ -104,7 +120,7 @@ int p2c_liblist::callModFunc(std::string arg)
         cmd = arg.substr(0, pos);
         token = arg.substr(pos + 1);
     }
-    p2c_alerter::alerting(DEBUG, "'p2c_liblist':107: key=", cmd); // TODO:remove
+    p2c_alerter::alerting(DEBUG, "'p2c_liblist':123: callModFunc() key=", cmd);
     if (this->_mod_map.count(cmd))
         return this->_mod_map[cmd]->entry(cmd, token);
     else
@@ -122,5 +138,3 @@ int p2c_liblist::callGenFunc(std::string arg)
 }
 
 #endif
-
-
