@@ -10,8 +10,6 @@ private:
 public:
     p2c_mod(){};
     ~p2c_mod(){};
-    int entry() { return entry("", ""); };
-    int entry(std::string cmd) { return entry(cmd, ""); }
     virtual int entry(std::string, std::string)
     {
         p2c_alerter::alerting(WARN, "mod entry undefine");

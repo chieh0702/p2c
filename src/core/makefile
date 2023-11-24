@@ -1,5 +1,5 @@
-BIN_PATH := /root/vscode/bin
-CORE_PATH := /root/vscode/src/core
+BIN_PATH  := ../../bin
+CORE_PATH := ./
 
 all: p2c
 

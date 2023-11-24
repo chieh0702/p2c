@@ -78,6 +78,10 @@ public:
 	void initArgs(int argc, char const *argv[]);
 	void addArg(std::string, std::vector<std::string>);
 	void addArg(std::string, std::string);
+	bool countArg(std::string name)
+	{
+		return _args->count(name) == 1 ? true : false;
+	};
 	std::queue<std::string> *getArg(std::string);
 	std::string getJSON();
 	// TODO:json to argtable
@@ -137,7 +141,7 @@ void p2c_argtable::addArg(std::string name, std::string context)
 	(*_args)[name]->push(context);
 }
 
-// Note: Please check whether the returned value is "nullptr"
+// return pointer of queue, if not found, return empty queue<string>
 std::queue<std::string> *p2c_argtable::getArg(std::string name)
 {
 	if (_args->count(name))
@@ -145,7 +149,7 @@ std::queue<std::string> *p2c_argtable::getArg(std::string name)
 	else
 	{
 		p2c_alerter::alerting(INFO, "map '_args' hasn't key =", name);
-		return nullptr;
+		return new std::queue<std::string>;
 	}
 }
 

@@ -57,7 +57,7 @@ p2c_liblist::~p2c_liblist()
 
 void p2c_liblist::loadLibrary()
 {
-    const char LIB_PATH[] = "/root/vscode/lib/"; // TODO: change to /lib/p2c/module/
+    const char LIB_PATH[] = "/mnt/e/github/p2c/lib/"; // TODO: change to /lib/p2c/module/
     DIR *dirp = opendir(LIB_PATH);
     if (!dirp)
     {
@@ -131,10 +131,21 @@ int p2c_liblist::callModFunc(std::string arg)
 }
 int p2c_liblist::callGenFunc(std::string arg)
 {
-    if (this->_mod_map.count(arg))
-        return !this->_gen_map[arg]->entry();
+    std::size_t pos = arg.find(" ");
+    std::string cmd = arg, token;
+    if (pos != std::string::npos)
+    {
+        cmd = arg.substr(0, pos);
+        token = arg.substr(pos + 1);
+    }
+    p2c_alerter::alerting(DEBUG, "'p2c_liblist':141: callGenFunc() key=", cmd);
+    if (this->_gen_map.count(cmd))
+        return this->_gen_map[cmd]->entry(cmd, token);
     else
-        return 0;
+    {
+        p2c_alerter::alerting(ERROR, "Usage: p2c [options]\n");
+        return 1;
+    }
 }
 
 #endif

@@ -1,10 +1,11 @@
-CORE_PATH := /root/vscode/src/core
-BIN_PATH := /root/vscode/bin
+CORE_PATH := ../core
+BIN_PATH  := ../../bin
 SRC_FILES := $(wildcard *.cpp)
 OBJ_FILES := $(patsubst %.cpp,%.o,$(SRC_FILES))
 OUT_FILES := $(patsubst %.o,%.out,$(OBJ_FILES))
 BIN_FILES := $(patsubst %.o,%,$(OBJ_FILES))
 COLOR_GREEN := echo "\e[1;32m"
+COLOR_BLUE  := echo "\e[1;34m"
 COLOR_RESET := echo "\e[0m"
 
 all: argtable liblist 
@@ -35,6 +36,19 @@ mod_normal: p2c_test_mod_normal
 	@ $(COLOR_RESET)
 	@ make clean	
 p2c_test_mod_normal: p2c_test_mod_normal.o
+	g++ -rdynamic $< -o $@ -ldl
+	rm $<
+
+gen_dockerfile: p2c_test_gen_dockerfile
+	@ $(COLOR_GREEN)
+	- ./$<
+	@ $(COLOR_BLUE)
+	@ echo "\nDockerfile generated:\n"
+	@ cat Dockerfile
+	@ rm Dockerfile
+	@ $(COLOR_RESET)
+	@ make clean
+p2c_test_gen_dockerfile: p2c_test_gen_dockerfile.o
 	g++ -rdynamic $< -o $@ -ldl
 	rm $<
 

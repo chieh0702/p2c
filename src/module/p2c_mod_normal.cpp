@@ -1,7 +1,6 @@
 #include <p2c_lib.h>
 
 #include <iostream>
-#include <sstream>
 
 std::vector<std::string> split(std::string str, std::string pattern)
 {

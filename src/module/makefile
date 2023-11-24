@@ -1,5 +1,5 @@
-CORE_PATH := /root/vscode/src/core
-LIB_PATH := /root/vscode/lib
+CORE_PATH := ../core
+LIB_PATH  := ../../lib
 SRC_FILES := $(wildcard *.cpp)
 OBJ_FILES := $(patsubst %.cpp,%.o,$(SRC_FILES))
 DLL_FILES := $(patsubst %.o,%.so,$(OBJ_FILES))
