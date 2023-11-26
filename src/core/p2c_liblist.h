@@ -57,7 +57,7 @@ p2c_liblist::~p2c_liblist()
 
 void p2c_liblist::loadLibrary()
 {
-    const char LIB_PATH[] = "/mnt/e/github/p2c/lib/"; // TODO: change to /lib/p2c/module/
+    const char LIB_PATH[] = "../../lib/"; // TODO: change to /lib/p2c/module/
     DIR *dirp = opendir(LIB_PATH);
     if (!dirp)
     {

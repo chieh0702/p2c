@@ -52,5 +52,14 @@ p2c_test_gen_dockerfile: p2c_test_gen_dockerfile.o
 	g++ -rdynamic $< -o $@ -ldl
 	rm $<
 
+mod_website: p2c_test_mod_website
+	@ $(COLOR_GREEN)
+	- ./$<
+	@ $(COLOR_RESET)
+	@ make clean
+p2c_test_mod_website: p2c_test_mod_website.o
+	g++ -rdynamic $< -o $@ -ldl
+	rm $<
+
 clean:
 	-@ rm $(BIN_FILES) $(OBJ_FILES) 2>/dev/null

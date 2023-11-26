@@ -1,1 +1,1 @@
-docker run --rm -it -v /root/vscode/lib:/lib/p2c -v /root/vscode/bin:/bin/p2c -e PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/bin/p2c debian
+docker run --rm -it -v /mnt/e/github/p2c:/mnt/p2c p2c_debian:stable

@@ -5,6 +5,12 @@ function proc() {
     xhr.send("close");
 }
 
+// TODO: 遇到特定KEY,有不同版面配置. ex. 'COPY' -> 'SRC' -> 'DEST'
+//                                      'ENV'  -> 'KEY' = 'VALUE'
+// TODO: 平面化設計+動畫
+// TODO: read json and parser json for output.
+//       create object for store json data.
+
 const title = document.getElementById('title');
 const plusicon = new_plusicon();
 plusicon.addEventListener("click", () => {

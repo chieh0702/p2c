@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <queue>
 
 class p2c_gen_dockerfile : public p2c_mod
@@ -10,7 +11,11 @@ public:
     p2c_gen_dockerfile(){};
     ~p2c_gen_dockerfile(){};
     virtual int entry(std::string, std::string) override;
-    virtual std::vector<std::string> getCommand() override;
+    virtual std::vector<std::string> getCommand() override
+    {
+        std::vector<std::string> cmd{"-df", "--dockerfile"};
+        return cmd;
+    };
 };
 
 int p2c_gen_dockerfile::entry(std::string cmd, std::string token)
@@ -26,6 +31,12 @@ int p2c_gen_dockerfile::entry(std::string cmd, std::string token)
     }
     else
         p2c_alerter::alerting(ERROR, "FROM must be specified"); // TODO: add default FROM
+    std::queue<std::string> RUN(*argTable->getArg("RUN"));
+    while (!RUN.empty())
+    {
+        fout << "RUN " << RUN.front() << '\n';
+        RUN.pop();
+    }
     std::queue<std::string> ADD(*argTable->getArg("ADD"));
     while (!ADD.empty())
     {
@@ -62,12 +73,6 @@ int p2c_gen_dockerfile::entry(std::string cmd, std::string token)
         ENV.pop();
         fout << "ENV " << key << "=" << value << '\n';
     }
-    std::queue<std::string> RUN(*argTable->getArg("RUN"));
-    while (!RUN.empty())
-    {
-        fout << "RUN " << RUN.front() << '\n';
-        RUN.pop();
-    }
     std::queue<std::string> EXPOSE(*argTable->getArg("EXPOSE"));
     while (!EXPOSE.empty())
     {
@@ -88,12 +93,6 @@ int p2c_gen_dockerfile::entry(std::string cmd, std::string token)
     }
     fout.close();
     return 0;
-}
-
-std::vector<std::string> p2c_gen_dockerfile::getCommand()
-{
-    std::vector<std::string> cmd{"-df", "--dockerfile"};
-    return cmd;
 }
 
 extern "C" p2c_mod *p2c_create_mod()
