@@ -10,12 +10,19 @@ private:
 public:
     p2c_mod(){};
     ~p2c_mod(){};
-    virtual int entry() { return entry(""); };
-    virtual int entry(std::string){};
-    virtual std::vector<std::string> getCommand(){};
+    virtual int entry(std::string, std::string)
+    {
+        p2c_alerter::alerting(WARN, "mod entry undefine");
+        return 1;
+    };
+    virtual std::vector<std::string> getCommand()
+    {
+        p2c_alerter::alerting(WARN, "mod getCommand() undefine");
+        std::vector<std::string> null;
+        return null;
+    };
 };
 
-extern p2c_mod *p2c_create_mod();
 typedef p2c_mod *p2c_create_mod_t();
 
 #endif
