@@ -2,19 +2,6 @@
 
 #include <iostream>
 
-std::vector<std::string> split(std::string str, std::string pattern)
-{
-    std::vector<std::string> result;
-    while (str.find(pattern) != std::string::npos)
-    {
-        std::size_t pos = str.find(pattern);
-        result.push_back(str.substr(0, pos));
-        str = str.substr(pos + pattern.size());
-    }
-    result.push_back(str);
-    return result;
-}
-
 class p2c_mod_normal : public p2c_mod
 {
 public:
@@ -33,7 +20,7 @@ int p2c_mod_normal::entry(std::string cmd, std::string token)
 {
     if (cmd == "-a" || cmd == "--add")
     {
-        std::vector<std::string> argv = split(token, ":");
+        std::vector<std::string> argv = split_all(token, ":");
         if (argv.size() == 2)
             argTable->addArg("ADD", argv);
         else
@@ -41,7 +28,7 @@ int p2c_mod_normal::entry(std::string cmd, std::string token)
     }
     else if (cmd == "-c" || cmd == "--copy")
     {
-        std::vector<std::string> argv = split(token, ":");
+        std::vector<std::string> argv = split_all(token, ":");
         if (argv.size() == 2)
             argTable->addArg("COPY", argv);
         else
@@ -49,7 +36,7 @@ int p2c_mod_normal::entry(std::string cmd, std::string token)
     }
     else if (cmd == "-e" || cmd == "--env")
     {
-        std::vector<std::string> argv = split(token, "=");
+        std::vector<std::string> argv = split_all(token, "=");
         if (argv.size() == 2)
             argTable->addArg("ENV", argv);
         else

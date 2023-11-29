@@ -11,6 +11,7 @@
 
 #include <p2c_alerter.h>
 #include <p2c_mod.h>
+#include <p2c_split.h>
 
 class p2c_liblist
 {
@@ -26,20 +27,25 @@ public:
     void loadLibrary();
     int callModFunc(std::string);
     int callGenFunc(std::string);
+    std::string getHelp() // TODO: last \n, head info
+    {
+        std::stringstream help;
+        help << "Usage: p2c [options]\n";
+        help << "Options:\n";
+        for (p2c_mod *_mod : _created_mod)
+            help << "    " << _mod->getHelp();
+        return help.str();
+    };
     bool mod_count(std::string arg)
     {
-        std::size_t pos = arg.find(" ");
         std::string key = arg;
-        if (pos != std::string::npos)
-            key = arg.substr(0, pos);
+        split(arg, " ", &key, NULL);
         return _mod_map.count(key) == 1 ? true : false;
     };
     bool gen_count(std::string arg)
     {
-        std::size_t pos = arg.find(" ");
         std::string key = arg;
-        if (pos != std::string::npos)
-            key = arg.substr(0, pos);
+        split(arg, " ", &key, NULL);
         return _gen_map.count(key) == 1 ? true : false;
     };
 };
@@ -113,13 +119,8 @@ void p2c_liblist::loadLibrary()
 
 int p2c_liblist::callModFunc(std::string arg)
 {
-    std::size_t pos = arg.find(" ");
     std::string cmd = arg, token;
-    if (pos != std::string::npos)
-    {
-        cmd = arg.substr(0, pos);
-        token = arg.substr(pos + 1);
-    }
+    split(arg, " ", &cmd, &token);
     p2c_alerter::alerting(DEBUG, "'p2c_liblist':123: callModFunc() key=", cmd);
     if (this->_mod_map.count(cmd))
         return this->_mod_map[cmd]->entry(cmd, token);
@@ -131,13 +132,8 @@ int p2c_liblist::callModFunc(std::string arg)
 }
 int p2c_liblist::callGenFunc(std::string arg)
 {
-    std::size_t pos = arg.find(" ");
     std::string cmd = arg, token;
-    if (pos != std::string::npos)
-    {
-        cmd = arg.substr(0, pos);
-        token = arg.substr(pos + 1);
-    }
+    split(arg, " ", &cmd, &token);
     p2c_alerter::alerting(DEBUG, "'p2c_liblist':141: callGenFunc() key=", cmd);
     if (this->_gen_map.count(cmd))
         return this->_gen_map[cmd]->entry(cmd, token);
