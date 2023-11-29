@@ -1,3 +1,4 @@
+// close btn
 const send = document.getElementById('send_btn');
 function proc() {
     var xhr = new XMLHttpRequest();
@@ -5,21 +6,24 @@ function proc() {
     xhr.send("close");
 }
 
-// TODO: 遇到特定KEY,有不同版面配置. ex. 'COPY' -> 'SRC' -> 'DEST'
-//                                      'ENV'  -> 'KEY' = 'VALUE'
-// TODO: 平面化設計+動畫
-// TODO: read json and parser json for output.
-//       create object for store json data.
+//test btn
+const test = document.getElementById('test_btn');
+test.addEventListener("click", () => {
+    console.log(data);
+});
 
+// get location
+const listbox_group = document.getElementById("listbox_group");
+
+// add btn
 const title = document.getElementById('title');
 const plusicon = new_plusicon();
 plusicon.addEventListener("click", () => {
-    genListBox("",[]);
+    genListBox("", []);
 });
 title.appendChild(plusicon);
 
-const listbox_group = document.getElementById("listbox_group");
-function genListBox(name, context) {
+function genListBox(name, context, type) {
     const listgp = document.createElement("div");
     const titleview = document.createElement("div");
     titleview.className = "titleview";
@@ -59,9 +63,23 @@ function genListBox(name, context) {
     listgp.appendChild(titleview);
     const listbox = document.createElement("div");
     listbox.className = "listbox";
-    context.forEach(element => {
-        listbox.appendChild(new_viewbox(element));
-    });
+    if (!type) {
+        context.forEach(element => {
+            listbox.appendChild(new_viewbox(element));
+        });
+    }
+    else if (type === "=" || type == "->") {
+        for (var i = 0; i < context.length; i += 2) {
+            const listbox_2col = document.createElement("div");
+            const lable = document.createElement("p");
+            lable.innerText = type;
+            listbox_2col.className = "listbox_2col";
+            listbox_2col.appendChild(new_viewbox(context[i]));
+            listbox_2col.appendChild(lable);
+            listbox_2col.appendChild(new_viewbox(context[i + 1]));
+            listbox.appendChild(listbox_2col);
+        }
+    }
     listgp.appendChild(listbox);
     listbox_group.appendChild(listgp);
 }
@@ -76,6 +94,15 @@ function new_viewbox(context) {
         textinput.setAttribute("type", "text");
         textinput.setAttribute("value", option.innerText);
         textinput.addEventListener("focusout", () => {
+            if (viewbox.parentElement.previousElementSibling)
+                key = viewbox.parentElement.previousElementSibling.getElementsByTagName("h3")[0].innerText;
+            else
+                key = viewbox.parentElement.parentElement.previousElementSibling.getElementsByTagName("h3")[0].innerText;
+            console.log(key);
+            for (var i = 0; i < data[key].length; i++) {
+                if (data[key][i] === option.innerText)
+                    data[key][i] = textinput.value;
+            }
             option.innerText = textinput.value;
             option.removeAttribute("style");
             textinput.remove();
@@ -112,5 +139,15 @@ function new_plusicon() {
     return plusicon;
 }
 
-genListBox("Command", ["--gui", "--website"]);
-genListBox("From", ["debian"]);
+// init
+const inputJSON = '{"init_args":["--gui","website"],"COPY":["/etc","/etc","/var/www","/var/www"],"ENV":["key","value"],"ADD":["/etc","/etc"]}'
+data = JSON.parse(inputJSON);
+for (var element in data) {
+    console.log(element, data[element]);
+    if (element === "COPY" || element === "ADD")
+        genListBox(element, data[element], "->");
+    else if (element === "ENV")
+        genListBox(element, data[element], "=");
+    else
+        genListBox(element, data[element]);
+}
