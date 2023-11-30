@@ -1,16 +1,15 @@
-.titleview {
+.titleView {
   display: flex;
   flex-direction: row;
   align-items: center;
   height: 3em;
-  font-family: "Modern", "Noto Sans CJK TC", "Microsoft JhengHei", PingFang, STHeiti, sans-serif, serif;
 }
 
-.titleview * {
+.titleView * {
   padding-left: 1em;
 }
 
-.listbox {
+.listBoxContainer {
   display: flex;
   flex-direction: column;
   padding: 0.5em;
@@ -19,25 +18,17 @@
   background-color: rgba(240, 248, 255, 0.51);
 }
 
-.listbox_2col {
-  display: flex;
-  flex-direction: row;
-  justify-content:space-around;
-  align-items: center;
-}
-.listbox_2col a {
-  padding-right: 1em;
-}
 
-.listbox div {
+.listBox {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-right: 1em;
+  padding: 0.2em 1em;
 }
 
-.listbox a,
-.listbox input {
+.listBox a,
+.listBox input,
+.listBox p {
   flex-grow: 1;
   text-align: center;
   line-height: 2em;
@@ -45,8 +36,9 @@
   width: max-content;
 }
 
-.listbox div:hover {
-  background-color: rgb(190, 190, 190);
+.listBox:hover {
+  background-color: rgba(0, 0, 0, 0.256);
+  backdrop-filter: blur(4px);
 }
 
 input[type="button"] {
@@ -55,16 +47,14 @@ input[type="button"] {
   border-radius: 0.7em;
   border: 1px rgb(8, 41, 157) solid;
   background-color: #0e1a61ba;
-  font-family: "Noto Sans CJK TC", "Microsoft JhengHei", PingFang, STHeiti, sans-serif, serif;
 }
 
 .center {
   display: flex;
   align-items: center;
-  font-family: "Century", "Noto Sans CJK TC", "Microsoft JhengHei", PingFang, STHeiti, sans-serif, serif;
 }
 
-.center svg {
+#title svg {
   padding-left: 1em;
   margin-top: -8px;
 }
@@ -75,6 +65,6 @@ body {
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
-  background-color: rgba(0, 0, 0, 0.122);
+  background-color: rgba(0, 0, 0, 0.256);
   background-blend-mode: multiply;
 }
