@@ -16,9 +16,7 @@
   border: 1.5px #182da7e8 solid;
   border-radius: 0.5em;
   background-color: rgba(240, 248, 255, 0.51);
-}
-
-/*格子*/
+}/*格子*/
 
 
 .listBox {
@@ -27,9 +25,7 @@
   align-items: center;
   padding: 0.2em 1em;
   
-}
-
-/*字*/
+}/*字*/
 
 .listBox a {
   flex-grow: 1;
@@ -70,9 +66,7 @@ svg:hover {
   fill: rgba(255, 255, 255, 0.55);
   stroke:rgb(0, 0, 0);
   stroke-width: 0.45em;
-}
-
-/*垃圾桶|+號1.鼠標移動放大與顏色變化*/
+}/*垃圾桶|+號1.鼠標移動放大與顏色變化*/
 
 
 input[type="button"] {
@@ -83,9 +77,7 @@ input[type="button"] {
   border: 1.5px #182da7e8 solid;
   margin-right: 0.5em;
   outline: #182da7e8;
-}
-
-/*統一色調*/
+}/*統一色調*/
 
 input:hover {
   background-color: rgb(255, 255, 255);
