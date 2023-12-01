@@ -13,10 +13,12 @@
   display: flex;
   flex-direction: column;
   padding: 0.5em;
-  border: 1px #182da7e8 solid;
+  border: 1.5px #182da7e8 solid;
   border-radius: 0.5em;
   background-color: rgba(240, 248, 255, 0.51);
 }
+
+/*格子*/
 
 
 .listBox {
@@ -24,10 +26,27 @@
   flex-direction: row;
   align-items: center;
   padding: 0.2em 1em;
+  
 }
 
-.listBox a,
-.listBox input,
+/*字*/
+
+.listBox a {
+  flex-grow: 1;
+  text-align: center;
+  line-height: 2em;
+  height: 2em;
+  width: max-content;
+}
+
+.listBox input {
+  flex-grow: 1;
+  text-align: center;
+  line-height: 2em;
+  height: 2em;
+  width: max-content;
+}
+
 .listBox p {
   flex-grow: 1;
   text-align: center;
@@ -39,15 +58,51 @@
 .listBox:hover {
   background-color: rgba(0, 0, 0, 0.256);
   backdrop-filter: blur(4px);
+  transition: 1.3s all;
+  backdrop-filter: invert(20%);
 }
+
+svg:hover {
+  backdrop-filter: blur(4px);
+  transition: 0.35s all;
+  backdrop-filter: invert(70%);
+  transform: scale(1.27, 1.27);
+  fill: rgba(255, 255, 255, 0.55);
+  stroke:rgb(0, 0, 0);
+  stroke-width: 0.45em;
+}
+
+/*垃圾桶|+號1.鼠標移動放大與顏色變化*/
+
 
 input[type="button"] {
   height: 2.4em;
   width: 6em;
-  border-radius: 0.7em;
-  border: 1px rgb(8, 41, 157) solid;
-  background-color: #0e1a61ba;
+  border-radius: 0.5em;
+  background-color: rgba(240, 248, 255, 0.51);
+  border: 1.5px #182da7e8 solid;
+  margin-right: 0.5em;
+  outline: #182da7e8;
 }
+
+/*統一色調*/
+
+input:hover {
+  background-color: rgb(255, 255, 255);
+  backdrop-filter: blur(4px);
+  transition: 0.5s all;
+  backdrop-filter: invert(70%);
+  transform:translateZ(0);transform:translate3d(0,0,0);
+  border-radius: 0.5em;
+  border: 1.5px #182da7e8 solid;
+  -moz-box-shadow: 4px 4px 12px 4px rgba(20%, 20%, 40%, 0.5);
+  -webkit-box-shadow: 4px 4px 12px 4px rgba(20%, 20%, 40%, 0.5);
+  box-shadow: 4px 4px 12px 4px rgba(20%, 20%, 40%, 0.5);
+  outline: #182da7e8;
+}
+/*確定|TEST|輸入字1.鼠標移動更改顏色與浮出2.顏色深淺變化延遲3.光暈效果*/
+
+
 
 .center {
   display: flex;
@@ -67,4 +122,7 @@ body {
   background-size: cover;
   background-color: rgba(0, 0, 0, 0.256);
   background-blend-mode: multiply;
+  backdrop-filter: blur(2.8px);
 }
+
+/*背景1.毛玻璃特效*/
