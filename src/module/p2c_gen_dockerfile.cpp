@@ -31,12 +31,6 @@ int p2c_gen_dockerfile::entry(std::string cmd, std::string token)
     }
     else
         p2c_alerter::alerting(ERROR, "FROM must be specified"); // TODO: add default FROM
-    std::queue<std::string> RUN(*argTable->getArg("RUN"));
-    while (!RUN.empty())
-    {
-        fout << "RUN " << RUN.front() << '\n';
-        RUN.pop();
-    }
     std::queue<std::string> ADD(*argTable->getArg("ADD"));
     while (!ADD.empty())
     {
@@ -72,6 +66,12 @@ int p2c_gen_dockerfile::entry(std::string cmd, std::string token)
         std::string value = ENV.front();
         ENV.pop();
         fout << "ENV " << key << "=" << value << '\n';
+    }
+    std::queue<std::string> RUN(*argTable->getArg("RUN"));
+    while (!RUN.empty())
+    {
+        fout << "RUN " << RUN.front() << '\n';
+        RUN.pop();
     }
     std::queue<std::string> EXPOSE(*argTable->getArg("EXPOSE"));
     while (!EXPOSE.empty())

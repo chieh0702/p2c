@@ -10,10 +10,11 @@ public:
     ~p2c_mod_website(){};
     virtual int entry(std::string, std::string) override
     {
-        if (stat("/etc/init.d/apache2", NULL))
+        struct stat buffer;
+        if (stat("/etc/init.d/apache2", &buffer) == 0)
             parser_Apache();
-        else if (stat("/etc/init.d/nginx", NULL))
-            parser_Nginx();
+        // else if (stat("/etc/init.d/nginx", NULL) == 0)
+        //     parser_Nginx();
         return 0;
     };
     virtual std::vector<std::string> getCommand() override

@@ -12,56 +12,65 @@ public:
     virtual int entry(std::string, std::string args) override
     {
         int state = 0;
-        std::string user, password, database;
+        std::string user = "root", password, database;
         std::stringstream ss(args);
         std::string arg;
         while (ss >> arg)
         {
-            switch (state)
+            if (arg.find("=") != std::string::npos)
             {
-            case 0:
-                if (arg == "-u" || arg == "--user")
-                    state = 1;
-                else if (arg == "-p" || arg == "--password")
-                    state = 2;
-                else if (arg == "-d" || arg == "--database")
-                    state = 3;
+                std::string key, value;
+                split(arg, "=", &key, &value);
+                if (key == "user")
+                    user = value;
+                else if (key == "password")
+                    password = value;
+                else if (key == "database")
+                    database = value;
                 else
                     p2c_alerter::alerting(ERROR, "mod database: unknown argument" + arg);
-                break;
-            case 1:
-                user = arg;
-                state = 0;
-                break;
-            case 2:
-                password = arg;
-                state = 0;
-                break;
-            case 3:
-                database = arg;
-                state = 0;
-                break;
-            default:
-                p2c_alerter::alerting(ERROR, "mod database: unknown state");
-                break;
+            }
+            else
+                p2c_alerter::alerting(ERROR, "mod database: unknown argument" + arg);
+        }
+        std::vector<std::string> PATH = split_all(getenv("PATH"), ":");
+        p2c_alerter::alerting(DEBUG, "mod_database:52: $PATH num:", PATH.size());
+        struct stat buffer;
+        bool mysql = false, mongodb = false, pg = false, sqlite = false, mariadb = false, redis = false;
+        for (std::string path : PATH)
+        {
+            if (stat((path + "/mysqldump").c_str(), &buffer) == 0 && !mysql)
+            {
+                mysql_dump(user, password, database);
+                mysql = true;
+            }
+            if (stat((path + "/mongodump").c_str(), &buffer) == 0 && !mongodb)
+            {
+                mongodb_dump(user, password, database);
+                mongodb = true;
+            }
+            if (stat((path + "/pg_dump").c_str(), &buffer) == 0 && !pg)
+            {
+                pg_dump(user, password, database);
+                pg = true;
+            }
+            if (stat((path + "/sqlite").c_str(), &buffer) == 0 && !sqlite)
+            {
+                sqlite3_dump(user, password, database);
+                sqlite = true;
+            }
+            if (stat((path + "/redis-cli").c_str(), &buffer) == 0 && !redis)
+            {
+                redis_dump(user, password, database);
+                redis = true;
             }
         }
-        if (stat("/etc/init.d/mysql", NULL))
-            mysql_dump(user, password, database);
-        if (stat("/etc/init.d/mongodb", NULL))
-            mongodb_dump(user, password, database);
-        if (stat("/etc/init.d/postgresql", NULL))
-            pg_dump(user, password, database);
-        if (stat("/etc/init.d/sqlite", NULL))
-            sqlite3_dump(user, password, database);
-        if (stat("/etc/init.d/mariadb", NULL))
-            mariadb_dump(user, password, database);
-        if (stat("/etc/init.d/redis", NULL))
-            redis_dump(user, password, database);
+
+        return 0;
     };
     virtual std::vector<std::string> getCommand() override
     {
-        std::vector<std::string> cmd{"--database"};
+        std::vector<std::string> cmd{"-db", "--database"};
         return cmd;
     };
 };
