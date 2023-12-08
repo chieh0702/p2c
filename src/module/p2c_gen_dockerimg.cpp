@@ -15,6 +15,7 @@ public:
     {
         system("docker build ./ -t p2c:latest"); // TODO: custom docker image name
                                                  //       check dockerfile exist
+        return 0;
     };
     virtual std::vector<std::string> getCommand() override
     {

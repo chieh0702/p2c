@@ -2,10 +2,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  line-height: 3em;
   height: 3em;
 }
 
 .titleView * {
+  font-size: 1.2em;
+  line-height: 2em;
   padding-left: 1em;
 }
 
@@ -13,21 +16,22 @@
   display: flex;
   flex-direction: column;
   padding: 0.5em;
-  border: 1.5px #182da7e8 solid;
   border-radius: 0.5em;
-  background-color: rgba(240, 248, 255, 0.51);
-}/*格子*/
-
+  background-color: rgb(49, 49, 49);
+  box-shadow: black 0px 0px 8px 0px;
+}
 
 .listBox {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0.2em 1em;
-  
-}/*字*/
+  border-radius: 0.5em;
+}
 
-.listBox a {
+.listBox a,
+.listBox input,
+.listBox label {
   flex-grow: 1;
   text-align: center;
   line-height: 2em;
@@ -35,20 +39,8 @@
   width: max-content;
 }
 
-.listBox input {
-  flex-grow: 1;
-  text-align: center;
-  line-height: 2em;
-  height: 2em;
-  width: max-content;
-}
-
-.listBox p {
-  flex-grow: 1;
-  text-align: center;
-  line-height: 2em;
-  height: 2em;
-  width: max-content;
+.listBox svg {
+  padding: 0em 1em;
 }
 
 .listBox:hover {
@@ -72,29 +64,17 @@ svg:hover {
 input[type="button"] {
   height: 2.4em;
   width: 6em;
-  border-radius: 0.5em;
-  background-color: rgba(240, 248, 255, 0.51);
-  border: 1.5px #182da7e8 solid;
-  margin-right: 0.5em;
-  outline: #182da7e8;
-}/*統一色調*/
-
-input:hover {
-  background-color: rgb(255, 255, 255);
-  backdrop-filter: blur(4px);
-  transition: 0.5s all;
-  backdrop-filter: invert(70%);
-  transform:translateZ(0);transform:translate3d(0,0,0);
-  border-radius: 0.5em;
-  border: 1.5px #182da7e8 solid;
-  -moz-box-shadow: 4px 4px 12px 4px rgba(20%, 20%, 40%, 0.5);
-  -webkit-box-shadow: 4px 4px 12px 4px rgba(20%, 20%, 40%, 0.5);
-  box-shadow: 4px 4px 12px 4px rgba(20%, 20%, 40%, 0.5);
-  outline: #182da7e8;
+  border-radius: 0.7em;
+  border: none;
+  background-color: #0e1a61ba;
 }
 /*確定|TEST|輸入字1.鼠標移動更改顏色與浮出2.顏色深淺變化延遲3.光暈效果*/
 
 
+
+input[type="button"]:hover {
+  background-color: #323d7cba;
+}
 
 .center {
   display: flex;
@@ -102,19 +82,21 @@ input:hover {
 }
 
 #title svg {
+  font-size: 2em;
   padding-left: 1em;
   margin-top: -8px;
 }
 
-body {
-  background-image: url('https://images.pexels.com/photos/238118/pexels-photo-238118.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
-  background-size: cover;
-  background-color: rgba(0, 0, 0, 0.256);
-  background-blend-mode: multiply;
-  backdrop-filter: blur(2.8px);
+svg {
+  fill: rgb(174, 174, 174);
+  filter: drop-shadow(0px 0px 2px black);
 }
 
-/*背景1.毛玻璃特效*/
+svg:hover {
+  fill: white;
+}
+
+body {
+  background-color: rgb(32, 32, 32);
+  color: white;
+}

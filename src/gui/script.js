@@ -1,8 +1,30 @@
-// close btn
+// send btn
 const send = document.getElementById('send_btn');
-function proc() {
+
+function sendJSON() {
     var xhr = new XMLHttpRequest();
     xhr.open('post', window.location.href.toString() + 'input');
+
+    var jsonData = {};
+
+    const viewContainers = document.getElementsByClassName("viewContainer");
+    Array.from(viewContainers).forEach((viewContainer) => {
+        var titleText = viewContainer.querySelector(".titleView a").innerText;
+
+        var listBoxItems = [];
+        viewContainer.querySelectorAll(".listBox").forEach((listBoxElement) => {
+            listBoxElement.querySelectorAll("a").forEach((element) => {
+                listBoxItems.push(element.innerText);
+            })
+        });
+
+        jsonData[titleText] = listBoxItems;
+    });
+
+    var jsonString = JSON.stringify(jsonData);
+    console.log(jsonString);
+
+    xhr.send(jsonString);
     xhr.send("close");
 }
 
@@ -29,9 +51,10 @@ function genViewBox(name, context, padding) {
 
     const titleView = newTitleView(name);
     titleView.getElementsByTagName("svg")[0].addEventListener("click", () => {
-        if (["COPY", "ADD"].includes(name))
+        var titleText = titleView.querySelector("a").innerText;
+        if (["COPY", "ADD"].includes(titleText))
             listBoxContainer.appendChild(newListBox("", "⇨"));
-        else if (["ENV"].includes(name))
+        else if (["ENV"].includes(titleText))
             listBoxContainer.appendChild(newListBox("", "="));
         else
             listBoxContainer.appendChild(newListBox(""));
@@ -75,7 +98,7 @@ function newListBox(context, padding) {
     if (padding) {
         const arg0 = newDynText(context[0]);
         const arg1 = newDynText(context[1]);
-        const paddingText = document.createElement("p");
+        const paddingText = document.createElement("label");
         paddingText.innerText = padding;
         listBox.appendChild(arg0);
         listBox.appendChild(paddingText);
@@ -94,10 +117,12 @@ function newListBox(context, padding) {
 
 function newDynText(context) {
     const text = document.createElement("a");
+    text.className = "dynText";
     text.textContent = context;
     text.addEventListener("dblclick", () => {
         text.style = "display: none;";
         const textInput = document.createElement("input");
+        textInput.className = "dynTextInput";
         textInput.setAttribute("type", "text");
         textInput.setAttribute("value", text.innerText);
         textInput.addEventListener("focusout", () => {
@@ -131,7 +156,7 @@ function createSvgIcon(type) {
 }
 
 // init
-const inputJSON = '{"init_args":["--gui","--website"],"COPY":["/etc","/etc","/var/www","/var/www"],"ENV":["key","value"],"ADD":["/etc","/etc"]}'
+const inputJSON = '{"init_args":["--gui","--website"],"COPY":["/etc","/etc","/var/www","/var/www"],"ENV":["key","value"],"ADD":["/etc","/etc"],"Hello":["This is test text.","arg0"]}'
 data = JSON.parse(inputJSON);
 for (var element in data) {
     console.log(element, data[element]);

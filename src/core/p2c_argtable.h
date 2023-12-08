@@ -78,6 +78,7 @@ public:
 	void initArgs(int argc, char const *argv[]);
 	void addArg(std::string, std::vector<std::string>);
 	void addArg(std::string, std::string);
+	void addArg(std::string, std::string, std::string);
 	bool countArg(std::string name)
 	{
 		return _args->count(name) == 1 ? true : false;
@@ -124,6 +125,12 @@ void p2c_argtable::addArg(std::string name, std::vector<std::string> contexts)
 {
 	for (std::string context : contexts)
 		this->addArg(name, context);
+}
+
+void p2c_argtable::addArg(std::string name, std::string context1, std::string context2)
+{
+	this->addArg(name, context1);
+	this->addArg(name, context2);
 }
 
 void p2c_argtable::addArg(std::string name, std::string context)
@@ -174,13 +181,17 @@ std::string p2c_argtable::getJSON()
 		std::queue<std::string> duplicate(*n.second);
 		do
 		{
+			std::string temp = duplicate.front();
+			for (int i = 0; i < temp.length(); i++)
+				if (temp[i] == '"')
+					temp.insert(i++, "\\");
 			if (first_val)
 			{
 				first_val = false;
-				JSON += "\"" + duplicate.front() + "\"";
+				JSON += "\"" + temp + "\"";
 			}
 			else
-				JSON += ",\"" + duplicate.front() + "\"";
+				JSON += ",\"" + temp + "\"";
 			duplicate.pop();
 		} while (!duplicate.empty());
 		JSON += "]";
