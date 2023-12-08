@@ -43,12 +43,18 @@ public:
             p2c_alerter::alerting(DEBUG, "mod compatibility: copy " + copy->front());
             if (i % 2 == 0)
             {
-                std::vector<std::string> path_split = split_all(copy->front(), "/");
-                std::string filename = path_split[path_split.size() - 1];
-                if (filename.empty())
-                    filename = path_split[path_split.size() - 2];
-                system(("tar chvf ./p2c_export/" + filename + ".tar -C " + copy->front() + " .").c_str());
-                argTable->addArg("ADD", "./p2c_export/" + filename + ".tar");
+                std::string fullPath = copy->front();
+                std::hash<std::string> hash_fn;
+                std::string fullPath_hash = std::to_string(hash_fn(fullPath));
+                std::size_t pos = fullPath.find_last_of("/");
+                std::string path = fullPath.substr(0, pos);
+                std::string filename = fullPath.substr(pos + 1);
+                bool isDir = filename.empty();
+                if (isDir)
+                    system(("tar chvf ./p2c_export/" + fullPath_hash + ".tar -C " + path + " .").c_str());
+                else
+                    system(("tar chvf ./p2c_export/" + fullPath_hash + ".tar -C " + path + " " + filename).c_str());
+                argTable->addArg("ADD", "./p2c_export/" + fullPath_hash + ".tar");
                 copy->pop();
             }
             else

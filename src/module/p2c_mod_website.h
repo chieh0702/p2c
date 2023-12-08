@@ -6,6 +6,7 @@
 #include <set>
 #include <dlfcn.h>
 #include <dirent.h>
+#include <cstdlib>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -70,9 +71,25 @@ void parser_Apache()
 {
     const char apache_path[] = "/etc/apache2/";
     p2c_alerter::alerting(DEBUG, "start parser apache.", "apache path:", apache_path);
-    argTable->addArg("RUN", "apt-get update; apt-get install -o DPkg::Options::=\"--force-confold\" apache2 -y");
-    argTable->addArg("COPY", apache_path);
-    argTable->addArg("COPY", apache_path);
+    argTable->addArg("RUN", "cd /etc/apache2/mods-enabled/;for file in *;do rm $file; ln -s /etc/apache2/mods-available/$file $file; done");
+    argTable->addArg("RUN", "cd /etc/apache2/sites-enabled/;for file in *;do rm $file; ln -s /etc/apache2/sites-available/$file $file; done");
+    system("apt-get update;apt-get install -o DPkg::Options::=\"--force-confold\" -y apache2");
+    // system("apt-get update;apt-get install -y dpkg-repack;dpkg-repack $(apt-cache depends apache2 |awk '{print $2}') apache2 >dpkg-repack.log");
+    // std::ifstream file("dpkg-repack.log");
+    // std::string token;
+    // while (file >> token)
+    // {
+    //     if (token == "in")
+    //     {
+    //         file >> token;
+    //         std::string temp = token.substr(1, token.size() - 3);
+    //         argTable->addArg("COPY", temp, "/");
+    //         argTable->addArg("RUN", "apt-get install -o DPkg::Options::=\"--force-confold\" /" + temp.substr(temp.find_last_of('/') + 1) + " -y");
+    //     }
+    // }
+    // file.close();
+    // remove("./dpkg-repack.log");
+    argTable->addArg("COPY", apache_path, apache_path);
     std::set<std::string> pathSet = findPath(apache_path, "DocumentRoot", 1);
     std::set<std::string> temp = findPath(apache_path, "LoadModule", 2);
     pathSet.insert(temp.begin(), temp.end());
@@ -103,7 +120,3 @@ void parser_Apache()
         argTable->addArg("COPY", path);
     }
 }
-
-// void parser_Nginx()
-// {
-// }
